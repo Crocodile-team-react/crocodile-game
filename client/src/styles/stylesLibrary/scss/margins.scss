@@ -1,0 +1,40 @@
+.m-a {
+  margin: auto;
+}
+
+@for $i from 0 through 20 {
+  .m-#{$i*5}-a {margin: 5*$i+px auto;}
+}
+
+@for $i from 0 through 20 {
+  .m-a-#{$i*5} {margin: auto 5*$i+px;}
+}
+
+@for $i from 0 through 20 {
+  .m-#{$i*5} {margin: 5*$i+px;}
+}
+
+@for $i from 0 through 20 {
+  @for $j from 0 through 20 {
+    .m-#{$i*5}-#{$j*5} {margin: 5*$i+px 5*$i+px;}
+  }
+}
+
+@for $i from 0 through 20 {
+  @each $name in t, r, b, l {
+    .m-#{$name}-#{$i*5} {
+      @if $name == t{
+        margin-top: 5*$i+px;
+      }
+      @else if $name == r {
+        margin-right: 5*$i+px;
+      }
+      @else if $name == b {
+        margin-bottom: 5*$i+px;
+      }
+      @else {
+        margin-left: 5*$i+px;
+      }
+    }
+  }
+}
