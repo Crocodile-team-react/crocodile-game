@@ -9,9 +9,6 @@ socket.on("connect_error", (err) => {
     console.warn("Please select username");
   }
 })
-socket.on("user-id", (data) => {
-  console.log("FROM FUNCTION " + data)
-});
 socket.onAny((event, ...args) => {
   console.log(event, args);
 });
