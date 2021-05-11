@@ -1,9 +1,10 @@
 import React from 'react'
+import 'input'
 
 function Modal() {
   return (
     <div>
-      Modal
+      
     </div>
   )
 }

@@ -1,28 +1,36 @@
-.but-all {
+.all {
     border: none;
     background-color: transparent;
     transition: background-image .3s linear;
-    font: DoloresCyr;
     font-size: 12px;
     color: white;
-    height: 40px;
 }
 
 .but {
     width: 250px;
+    height: 40px;
+    background-image: url(button-img/button.svg);
+}
+
+.but:hover {
+    background-image: url(button-img/button-active.svg);
 }
 
 .but-back {
     width: 100px;
+    height: 40px;
     color: #22B14C;
+    background-image: url(button-img/back-button.svg);
+}
+
+.but-back:hover {
+    background-image: url(button-img/back-button-hover.svg);
+    color: white;
 }
 
 .but-middle {
     width: 130px;
-}
-
-.but-skip{
-    width: 150px;
+    height: 40px;
 }
 
 .but-arrow {
@@ -48,23 +56,6 @@
     background-color: #1F993F
 }
 
-.bgi {
-    background-image: url(button-img/button.svg);
-}
-
-.bgi:hover {
-    background-image: url(button-img/button-active.svg);
-}
-
-.bgi-back {
-    background-image: url(button-img/back-button.svg);
-}
-
-.bgi-back:hover {
-    background-image: url(button-img/back-button-hover.svg);
-    color: white;
-}
-
 .bgi-start {
     background-color: url(button-img/start-button.svg);
 }
@@ -79,8 +70,4 @@
 
 .bgi-arrow2 {
     background-image: url(button-img/arrow2.svg);
-}
-
-.bgi-skip{
-    background-image: url(button-img/skip-button.svg);
 }
