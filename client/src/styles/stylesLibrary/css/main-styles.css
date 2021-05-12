@@ -4,13 +4,15 @@
     src: url("fonts/Dolores.woff");
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     font-family: "DoloresCyr", "Comic Sans MS";
     box-sizing: border-box;
     list-style: none;
 }
 
-.all {
+.all-button {
     border: none;
     background-color: transparent;
     transition: background-image .3s linear;
@@ -18,43 +20,43 @@
     color: white;
 }
 
-.all:hover {
+.all-button:hover {
     cursor: pointer;
 }
 
-.but {
+.button {
     width: 250px;
     height: 40px;
     background-image: url("button-img/button.svg");
 }
 
-.but:hover {
+.button:hover {
     background-image: url("button-img/button-active.svg");
 }
 
-.but-back {
+.button-back {
     width: 100px;
     height: 40px;
     color: #22B14C;
     background-image: url("button-img/back-button.svg");
 }
 
-.but-back:hover {
+.button-back:hover {
     background-image: url("button-img/back-button-hover.svg");
     color: white;
 }
 
-.but-middle {
+.button-middle {
     width: 130px;
     height: 40px;
 }
 
-.but-arrow {
+.button-arrow {
     width: 15px;
     height: 27px;
 }
 
-.but-back:before {
+.button-back:before {
     content: '';
     background-color: transparent;
     position: absolute;
@@ -67,28 +69,28 @@
     transition: background-image .3s linear;
 }
 
-.but-back:hover:before {
+.button-back:hover:before {
     background-image: url("button-img/arrow-hover.svg");
     background-color: #1F993F;
 }
 
-.bgi-start {
+.button-bgi-start {
     background-image: url("button-img/start-button.svg");
 }
 
-.bgi-invite {
+.button-bgi-invite {
     background-image: url("button-img/Invite-button.svg");
 }
 
-.bgi-arrow1 {
+.button-bgi-arrow1 {
     background-image: url("button-img/arrow1.svg");
 }
 
-.bgi-arrow2 {
+.button-bgi-arrow2 {
     background-image: url("button-img/arrow2.svg");
 }
 
-.inp-all {
+.input-all {
     background-repeat: no-repeat;
     border: none;
     padding-left: 10px;
@@ -98,7 +100,7 @@
     color: #22B14C;
 }
 
-.inp {
+.input {
     background-image: url("input-img/input.svg");
     width: 300px;
 }
@@ -109,12 +111,12 @@
     display: flex;
 }
 
-.inp-ok {
+.input-ok {
     background-image: url("input-img/input.svg");
     width: 240px;
 }
 
-.but-ok {
+.button-ok {
     width: 40px;
     height: 41px;
     background-image: url("button-img/button-ok.svg");
@@ -123,47 +125,47 @@
     transform: translate(-6px, -1px);
 }
 
-.but-ok:hover {
+.button-ok:hover {
     background-image: url("button-img/button-ok-hover.svg");
 }
 
-.con-all {
+.container-all {
     background: #FFFFFF;
     border: 2px solid #22B04C;
     border-radius: 8px;
 }
 
-.con-login {
+.container-login {
     width: 500px;
     height: 300px;
     background-color: #F1F1F1;
 }
 
-.con-canvas {
+.container-canvas {
     width: 750px;
     height: 400px;
 }
 
-.con-chat {
+.container-chat {
     background: #9BECB3;
     border: none;
     width: 310px;
     height: 450px;
 }
 
-.con-error {
+.container-error {
     border: none;
     width: 446px;
     height: 315px;
 }
 
-.con-choice {
+.container-choice {
     border: none;
     width: 390px;
     height: 446px;
 }
 
-.con-avatar {
+.container-avatar {
     width: 170px;
     height: 170px;
     border-radius: 50%;
