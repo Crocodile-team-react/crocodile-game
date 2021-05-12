@@ -1,33 +1,34 @@
-#Style guide
+# Style guide
 
-###Description:
+### Description:
 
 This library was written in `scss` using `emmet`-similar syntax.
-Has a precompiled form in the `./css/...` directory,
-and source code in the `./scss/...` directory.
+This library has 2 files:
+* main-styles.css - most commonly used element styles  (buttons, inputs)
+* reset.css - file for resetting styles
 
-It is recommended to use the ***precompiled*** version for faster execution.
+### How to use:
 
-###How to use:
-
-You just need to write any class from library in `HTML`.
-
+First you need to import styles.
 For example:
 
-```html
-<div className="df fw-w jc-sa">
-    <div className="element"></div>
-    <div className="element fg-2"></div>
-    <div className="element"></div>
-    <div className="element"></div>
-    <div className="element"></div>
-</div>
+```javascript
+    import '../stylesLibrary/css/main-styles.css';
 ```
 
-There is a parent block `div` with 5 children blocks `div`.
-Parent block has some classes from library that represents next `css` code:
-* df - `display: flex`
-* fw-w - `flex-wrap: wrap`
-* jc-sa - `justify-content: space-around`
+Next you need to write any class from library in `HTML`.
 
-Second children block `div` has `css` property `flex-grow` with value `2`.
+For example creating an `input` with button `ok`:
+
+```html
+<form className="form-ok">
+    <input className="inp-all inp-ok"/>
+    <button className="all but-ok">Ок</button>
+</form>
+```
+### Contain elements
+
+* connected font
+* buttons
+* inputs
+* containers
