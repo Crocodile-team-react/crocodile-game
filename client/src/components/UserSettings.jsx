@@ -1,9 +1,14 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 
-function UserSettings() {
+function UserSettings({ inputRef }) {
+  const username = useSelector(state => state.user.username);
   return (
     <div>
-      user settings
+      <div>
+        <span>Choose icon here</span>
+      </div>
+      <input ref={inputRef} type="text" name="name" placeholder="Your name" defaultValue={username}/>
     </div>
   )
 }
