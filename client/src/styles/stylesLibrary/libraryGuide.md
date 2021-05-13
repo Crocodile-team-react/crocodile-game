@@ -3,9 +3,6 @@
 ### Description:
 
 This library was written in `scss` using `emmet`-similar syntax.
-This library has 2 files:
-* main-styles.css - most commonly used element styles  (buttons, inputs)
-* reset.css - file for resetting styles
 
 ### How to use:
 
@@ -13,7 +10,7 @@ First you need to import styles.
 For example:
 
 ```javascript
-    import '../stylesLibrary/css/main-styles.css';
+    import '../stylesLibrary/main-styles.scss';
 ```
 
 Next you need to write any class from library in `HTML`.
@@ -21,9 +18,9 @@ Next you need to write any class from library in `HTML`.
 For example creating an `input` with button `ok`:
 
 ```html
-<form className="form-ok">
-    <input className="inp-all inp-ok"/>
-    <button className="all but-ok">Ок</button>
+<form className="form-with-inp-but">
+    <input type="text" className="input"/>
+    <button className="button-short-filled" type="submit">Ок</button>
 </form>
 ```
 ### Contain elements
@@ -31,4 +28,11 @@ For example creating an `input` with button `ok`:
 * connected font
 * buttons
 * inputs
-* containers
+* avatars
+* reset styles
+* arrows
+* background
+* color variables
+* logos
+* error styles
+* other elements
