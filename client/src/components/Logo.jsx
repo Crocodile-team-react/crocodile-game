@@ -1,12 +1,10 @@
-import React from 'react'
-import  '../styles/stylesLibrary/css/button.css'
+import React from 'react';
+import '../styles/stylesLibrary/css/reset.css'
 
 
 function Logo() {
-  return (
-    <div>
-      
-    </div>
+  return(
+    <div className='logo'></div>
   )
 }
 
