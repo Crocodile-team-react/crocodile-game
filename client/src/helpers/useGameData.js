@@ -12,23 +12,21 @@ export const useGameData = () => {
   const [username, setUsername] = useState('');
   const [isConnected, setConnected] = useState(false);
 
-  let socket = useRef(null);
+  const socket = useRef(null);
+  socket.current = io(SERVER_URL, {
+    autoConnect: false,
+  });
+  if (sessionID) {
+    socket.current.auth = {
+      sessionID,
+    };
+    socket.current.connect();
+  }
 
   useEffect(() => {
-    socket.current = io(SERVER_URL, {
-      autoConnect: false,
-    });
-    if (sessionID) {
-      console.log(sessionID);
-      socket.current.auth = {
-        sessionID
-      }
-      socket.current.connect();
-    }
     socket.current.onAny((msg, body) => {
       console.log(msg, body);
     });
-
     socket.current.on("session", (body) => {
       setSessionID(body.sessionID);
       setUsername(body.username);
@@ -37,31 +35,25 @@ export const useGameData = () => {
       socket.current.userID = body.userID;
       setConnected(true);
     });
-    socket.current.on("room:host", room => {
-      setRoomID(room.roomID);
-    })
+
     socket.current.on("connect_error", (err) => {
       if (err.message === "invalid username") {
         console.error("Please enter the name");
       }
       setConnected(false);
     });
-    
+
     return () => {
       socket.current.disconnect();
     };
 
   }, []);
-
-  const createNewRoom = () => {
-    socket.current.emit("room:host");
-  }
-  const sendMessage = () => {
-    console.log("sending");
-  }
   const getUserName = () => {
     return username
   }
+  const getUserID = () => {
+    return userID;
+  };
   const getConnection = (username) => {
     if (username) {
       socket.current.auth = {
@@ -70,21 +62,13 @@ export const useGameData = () => {
       socket.current.connect();
     }
   }
-  const getUserID = () => {
-    return userID;
-  }
-  const removeMessage = () => {
-    console.log("removing")
-  }
 
   return {
     socket: socket.current,
     roomID,
     isConnected,
     getConnection,
-    sendMessage,
     getUserName,
-    createNewRoom,
     getUserID,
   };
 }

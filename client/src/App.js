@@ -3,19 +3,19 @@ import React from 'react';
 import { StartPage, GamePage, NotFoundPage } from './pages';
 import { useHistory, Switch, Route, Link } from 'react-router-dom';
 import { useGameData } from './helpers/useGameData';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function App() {
   const socket = useGameData();
   const dispatch = useDispatch();
+  const roomID = useSelector(state => state.game.roomID);
   let history = useHistory();
-  
-  React.useEffect(() => {
-    if (socket.roomID) {
-      history.push('/game/' + socket.roomID);
-    }
-  }, [socket.roomID])
 
+  React.useEffect(() => {
+    if (roomID) {
+      history.push("/game/" + roomID);
+    }
+  }, [roomID])
   React.useEffect(() => {
     if (socket.isConnected) {
       const username = socket.getUserName();
@@ -39,7 +39,19 @@ function App() {
     socket.getConnection(username);
   };
   const handleNewGameClick = () => {
-    socket.createNewRoom();
+    socket.socket.emit("room:host", (url) => {
+      dispatch({
+        type: "SET_ROOMID",
+        payload: {
+          roomID: url
+        }
+      });
+    });
+  }
+  const handleLobbyLoading = (roomID) => {
+    socket.socket.emit("room:join", { roomID }, (response) => {
+      console.log(response);
+    });
   }
   return (
     <div className="app">
@@ -54,8 +66,9 @@ function App() {
             onNewGameClick={handleNewGameClick}
             onFindGameClick={handleFindGameClick} />
         </Route>
-        <Route path="/game/:roomId" exact>
-          <GamePage></GamePage>
+        <Route path="/game/:roomID" exact>
+          <GamePage
+            onLobbyLoading={handleLobbyLoading} />
         </Route>
         <Route path="/">
           <NotFoundPage />

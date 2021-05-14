@@ -60,16 +60,41 @@ io.on("connection", function (socket) {
     userID: socket.userID,
     username: socket.username
   })
-  socket.on("room:host", () => {
-    let roomID = roomStore.createNewRoom(socket.userID, true); // true => room opened
-    socket.emit("room:host", {
-      roomID,
-      allRooms: roomStore.getAllOpenedRooms(),
-    })
+  socket.on("room:host", (callback) => {
+    let roomID = roomStore.createNewRoom({
+      userID: socket.userID,
+      username: socket.username
+    }, true); // true => room opened
+    callback(roomID)
+  })
+  socket.on("room:join", (room, callback) => {
+    let hostID = roomStore.joinRoom({
+      userID: socket.userID,
+      username: socket.username
+    }, room.roomID);
+    let users = [];
+    if (hostID) {
+      socket.roomID = room.roomID;
+      users = roomStore.getRoomUsers(room.roomID);
+    }
+    callback({
+      hostID: hostID,
+      roomStore,
+      users,
+    });
+  })
+  socket.on("disconnect", () => {
+    if (socket.roomID) {
+      roomStore.leaveRoom(socket.userID, socket.roomID);
+    }
   })
 });
 
 http.listen(PORT, () => {
   console.log("Server has been started on " + PORT);
 });
+
+const returnRoomID = (roomID, socket) => {
+  socket.emit("room:host", roomID);
+}
 
