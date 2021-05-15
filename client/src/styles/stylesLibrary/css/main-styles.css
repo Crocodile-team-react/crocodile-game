@@ -22,6 +22,7 @@ body{
 .logo{
     width: 266px;
     height: 210px;
+    margin: 0 auto 50px;
     background-image: url('other-img/Logo.svg')
 }
 
@@ -145,19 +146,31 @@ body{
 .button-ok:hover {
     background-image: url("button-img/button-ok-hover.svg");
 }
+.button-small-ok {
+    z-index: 100;
+    background-image: url("button-img/button-small-ok.svg");
+    background-repeat: no-repeat;
+    left: 301px;
+    cursor: pointer;
+    position: absolute;
+    height: 40px;
+    width: 40px;
+}
 
 .container-all {
     background: #FFFFFF;
     border: 2px solid #22B04C;
     border-radius: 8px;
-    padding: 15px;
+    padding: 30px;
 }
 
 .container-login {
-    width: 500px;
+    max-width: 500px;
+    width: 100%;
     height: 300px;
     background-color: #F1F1F1;
-    margin: 50px;
+    margin: 0 auto 50px;
+    text-align: center;
 }
 
 .container-canvas {
@@ -192,4 +205,62 @@ body{
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: cover; 
+}
+
+.formGroup {
+    position: relative;
+}
+
+.card-wrapper {
+    text-align: center;
+}
+
+@media (min-width: 1200px) {
+    .logo {
+        margin-bottom: 0;
+    }
+
+    .container-login {
+        margin: 50px;
+    }
+}
+
+.wrapper {
+    padding: 0 20px;
+}
+
+@media (min-width: 1200px) {
+    .wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .wrapper2 {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+.div-control {
+    max-width: 300px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.input-name {
+    margin-top: 20px;
+}
+.div-setting input,
+.div-setting p {
+    margin-bottom: 15px;
+}
+
+p {
+    font-weight: 700;
 }
