@@ -1,49 +1,41 @@
-import React from 'react'
-import   '../styles/stylesLibrary/css/main-styles.css';
+import React, { useState } from 'react'
+import '../styles/stylesLibrary/css/main-styles.css';
 import '../styles/stylesLibrary/css/reset.css';
-import {useDispatch,useSelector} from 'react-redux';
-import Avatars from '../store/avatar-ref';
+import {useDispatch} from 'react-redux';
 
-const UserControls = (props)=>{
-    const dispatch = useDispatch();
-    let avatarIndex = useSelector(state => state.avatarIndex);
-
-    const SwithAvatarRigth = () =>{
-      dispatch({type:"+AvatarIndex", payload: 1});
-      console.log(avatarIndex)
-    };
-    const SwithAvatarLeft = () =>{
-      dispatch({type:"-AvatarIndex", payload:  1});
-      console.log(avatarIndex)
-    };
-
+const UserSettings = (props) => {
+  const[value, setValue]= useState();
+  
+  const handleChange = (e) =>{
+    setValue(e.target.value)
+  }
   return (
-    <div className="container-all container-login "> 
+    <div className="container-all container-login div-setting">
+      <button
+        className='all-button button'
+        onClick ={()=>{props.handleGameClick("Быстрая игра")}}
+      >Быстрая игра</button>
+      <p>...или...</p>
+      <button
+        className='all-button button'
+        onClick ={()=>{props.handleGameClick("Создать комнату")}}
+       >Создать комнату</button>
+      <p>...или...</p>
+      <div className="formGroup">
+        <input 
+        type="text" 
+        placeholder='Ссылка на комнату' 
+        className="input-all input-ok"
+        onChange ={handleChange}
         
-          <div className='div-control'>
-            <button data-arrow='left' 
-              className="button-bgi-arrow1 all-button button-arrow"
-              onClick={SwithAvatarRigth}
-            ></button>
-            <div className="container-avatar container-all"
-            style={{backgroundImage : `url(${process.env.PUBLIC_URL + Avatars[avatarIndex]})`}}>
-            </div>
-            <button 
-              className="all-button button-arrow button-bgi-arrow2"
-              onClick={SwithAvatarLeft}
-            ></button>
-          </div>
-          <div className="div">
-            <input  
-              type='text' 
-              placeholder='Ссылка на комнату' 
-              className="input-all input input-name" 
-              ref={props.inputRef}
-            />
-          </div>
-        
+      />
+      <button 
+        className="button-small-ok all-button"
+        onClick ={()=>{props.handleGameClick(value)}}
+      ></button>
       </div>
+    </div>
   )
 }
 
-export default UserControls
+export default UserSettings
