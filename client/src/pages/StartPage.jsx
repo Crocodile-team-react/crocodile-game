@@ -6,11 +6,13 @@ import {useDispatch,useSelector} from 'react-redux';
 
 function StartPage() {
   const inputNameRef = React.useRef();
+  const linkRoomRef = React.useRef();
   const dispatch = useDispatch();
   const username1 = useSelector(state => state.username);
-  const game = useSelector(state => state.typeGame)
-  const handleGameClick = (typeGame) => {
-    const username = inputNameRef.current.value;
+  const handleGameClick = (e, typeGame) => {
+    e.preventDefault();
+    const username = inputNameRef.current.value.trim();
+    const linkRoom = linkRoomRef.current.value.trim();
     if(username.length) {
       dispatch({
         type: "setName",payload:username
@@ -22,19 +24,27 @@ function StartPage() {
       inputNameRef.current.setAttribute('placeholder','Вы звбыли ввести имя')
       return;
     }
-    dispatch({
+    if((typeGame==='link'&& linkRoom) || typeGame==="Создать комнату" || typeGame==="Быстрая игра"){
+      dispatch({
         type: "setTypeGame",payload: typeGame,
       })
-      console.log(game);
+    }
+    else{
+      console.log(linkRoomRef)
+      linkRoomRef.current.classList.add('error-input');
+      linkRoomRef.current.setAttribute('placeholder','Вы звбыли ввести ссылку')
+    }
   }
 
   return (
     <div style={{ height: window.innerHeight }} className="wrapper">
                   <Logo />
-                  <div className="wrapper2" onSubmit={()=>{}}>
+                  <form action='#' className="wrapper2" onSubmit={()=>{}}>
                       <UserSettings inputNameRef={inputNameRef}/>
-                      < UserControls handleGameClick={handleGameClick} />
-                  </div>
+                      < UserControls handleGameClick={handleGameClick} 
+                        linkRoomRef={linkRoomRef}
+                      />
+                  </form>
               </div>
   )
 }

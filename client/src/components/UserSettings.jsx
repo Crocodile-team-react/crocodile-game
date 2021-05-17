@@ -9,11 +9,12 @@ const UserControls = (props)=>{
     const dispatch = useDispatch();
     let avatarIndex = useSelector(state => state.avatarIndex);
 
-    const SwithAvatarRigth = () =>{
+    const SwithAvatarRigth = (e) =>{
+      e.preventDefault()
       dispatch({type:"+AvatarIndex", payload: 1});
-      console.log(avatarIndex);
     };
-    const SwithAvatarLeft = () =>{
+    const SwithAvatarLeft = (e) =>{
+      e.preventDefault()
       dispatch({type:"-AvatarIndex", payload:  1});
     };
   return (
@@ -22,14 +23,14 @@ const UserControls = (props)=>{
           <div className='div-control'>
             <button data-arrow='left' 
               className="button-bgi-arrow1 all-button button-arrow"
-              onClick={SwithAvatarRigth}
+              onClick={(e)=>SwithAvatarRigth(e)}
             ></button>
             <div className="container-avatar container-all"
             style={{backgroundImage : `url(${process.env.PUBLIC_URL + Avatars[avatarIndex]})`}}>
             </div>
             <button 
               className="all-button button-arrow button-bgi-arrow2"
-              onClick={SwithAvatarLeft}
+              onClick={(e)=>SwithAvatarLeft(e)}
             ></button>
           </div>
           <div className="div">

@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import '../styles/stylesLibrary/css/main-styles.css';
 import '../styles/stylesLibrary/css/reset.css';
-import {useDispatch} from 'react-redux';
 
 const UserSettings = (props) => {
   const[value, setValue]= useState();
@@ -11,15 +10,17 @@ const UserSettings = (props) => {
   }
   return (
     <div className="container-all container-login div-setting">
-      <button
+      <input 
+        type="submit" value="Быстрая игра"
         className='all-button button'
-        onClick ={()=>{props.handleGameClick("Быстрая игра")}}
-      >Быстрая игра</button>
+        onClick ={(e)=>{props.handleGameClick( e, "Быстрая игра")}}
+      />
       <p>...или...</p>
-      <button
+      <input 
+        type="submit" value="Создать комнату"
         className='all-button button'
-        onClick ={()=>{props.handleGameClick("Создать комнату")}}
-       >Создать комнату</button>
+        onClick ={(e)=>{props.handleGameClick(e, "Создать комнату")}}
+       />
       <p>...или...</p>
       <div className="formGroup">
         <input 
@@ -27,12 +28,14 @@ const UserSettings = (props) => {
         placeholder='Ссылка на комнату' 
         className="input-all input-ok"
         onChange ={handleChange}
-        
+        ref = {props.linkRoomRef}
       />
-      <button 
+      <input 
+        type="submit" value="OK"
         className="button-small-ok all-button"
-        onClick ={()=>{props.handleGameClick(value)}}
-      ></button>
+        onClick ={(e)=>{props.handleGameClick(e , 'link')}}
+        onKeyDown ={e => {if (e.code === "Enter")  props.handleGameClick('link')}}
+      />
       </div>
     </div>
   )

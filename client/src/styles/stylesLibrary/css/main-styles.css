@@ -157,6 +157,10 @@ body{
     width: 40px;
 }
 
+.button-small-ok:hover {
+    background-image: url("button-img/button-small-ok-active.svg");
+}
+
 .container-all {
     background: #FFFFFF;
     border: 2px solid #22B04C;
