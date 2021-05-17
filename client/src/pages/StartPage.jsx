@@ -4,7 +4,7 @@ import '../styles/stylesLibrary/main-styles.scss'
 
 function StartPage() {
   return (
-    <div style={{ height: window.innerHeight }} className="wrapper-start-page ">
+    <div style={{ height: window.innerHeight }} className="wrapper-page">
       <Logo />
       <form action='#' className="wrapper-forma" >
           <UserSettings/>
