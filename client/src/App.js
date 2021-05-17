@@ -11,7 +11,7 @@ function App() {
     return (
         <Router>
             <div className="background">
-                <NotFoundPage />
+                <NotFoundPage/>
             </div>
         </Router>
     );

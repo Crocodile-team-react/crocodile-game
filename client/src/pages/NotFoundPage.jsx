@@ -9,7 +9,7 @@ function NotFoundPage() {
      <div>
        <button className="button-short-unfilled">
       Назад
-    </button>
+      </button>
      </div>
     </div>
   )
