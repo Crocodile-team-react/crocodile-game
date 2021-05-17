@@ -123,6 +123,7 @@ $chat-color: #000;
   padding-right: 10px;
   border: none;
   background-image: url("./images/input.svg");
+  background-color: transparent;
   background-repeat: no-repeat;
   font-size: 14px;
   color: $main-color;
@@ -292,3 +293,79 @@ $chat-color: #000;
   line-height: 17px;
   color: $main-color;
 }
+
+.wrapper-start-page{
+  padding: 0 20px;
+}
+
+@media (min-width: 1200px) {
+  .wrapper-start-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .wrapper-forma {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+.container{
+  border: 2px solid #22B04C;
+  border-radius: 8px;
+  padding: 30px;
+}
+
+.container-settings {
+  max-width: 500px;
+  width: 100%;
+  height: 300px;
+  background-color: #F1F1F1;
+  margin: 0 auto 50px;
+  text-align: center;
+}
+
+.div-settings {
+  max-width: 300px;
+  width: 100%;
+  margin: 0 auto 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.logo-start-page{
+  margin: 0 auto 50px;
+}
+
+@media (min-width: 1200px) {
+  .logo-start-page {
+    margin-bottom: 20px;
+  }
+
+  .container-settings {
+    margin: 50px;
+  }
+}
+
+
+.div-controls p {
+  margin-bottom: 20px;
+  margin-top: 20px;
+  font-weight: 700;
+}
+
+.wrapper-forma input {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.div-form{
+  margin: auto;
+}
+
+
+

@@ -1,12 +1,15 @@
 import React from 'react'
 import { Logo, UserSettings, UserControls } from '../components';
+import '../styles/stylesLibrary/main-styles.scss'
 
 function StartPage() {
   return (
-    <div>
+    <div style={{ height: window.innerHeight }} className="wrapper-start-page ">
       <Logo />
-      <UserSettings />
-      <UserControls />
+      <form action='#' className="wrapper-forma" >
+          <UserSettings/>
+          < UserControls/>
+      </form>
     </div>
   )
 }

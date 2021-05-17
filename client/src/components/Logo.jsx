@@ -1,12 +1,9 @@
 import React from 'react'
-import  '../styles/stylesLibrary/css/button.css'
-
+import '../styles/stylesLibrary/main-styles.scss'
 
 function Logo() {
   return (
-    <div>
-      
-    </div>
+    <div className="logo-big logo-start-page"></div>
   )
 }
 
