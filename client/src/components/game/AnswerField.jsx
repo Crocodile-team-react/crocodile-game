@@ -2,8 +2,9 @@ import React from 'react'
 
 function AnswerField() {
   return (
-    <div>
-      Answer Field
+    <div className="div-with-inp-but">
+      <input type="text" className=" input-ok-big"/>
+      <button className="button-short-filled" type="submit">Ок</button> 
     </div>
   )
 }

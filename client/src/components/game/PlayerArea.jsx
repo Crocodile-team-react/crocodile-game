@@ -5,8 +5,7 @@ import GameChat from './GameChat';
 
 function PlayerArea() {
   return (
-    <div>
-      Player Area
+    <div className="text-small container-play-list">
       <PlayerList></PlayerList>
       <GameChat></GameChat>
     </div>

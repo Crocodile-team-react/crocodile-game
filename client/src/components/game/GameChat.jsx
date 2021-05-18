@@ -5,7 +5,7 @@ import AnswerField from './AnswerField';
 function GameChat() {
   return (
     <div>
-      GameChat
+      
       <Message />
       <AnswerField />
     </div>
