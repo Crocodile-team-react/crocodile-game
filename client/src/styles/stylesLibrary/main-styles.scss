@@ -460,3 +460,14 @@ $chat-color: #000;
   }
   
 }
+
+.message{
+  color: #000;
+  li{
+    margin-bottom: 10px;
+    font-weight: 100;
+    span{
+      font-weight: 700;
+    }
+  }
+}
