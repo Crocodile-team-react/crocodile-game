@@ -2,7 +2,8 @@ import { gmC } from "../helpers/constants";
 
 const initialState = {
   userID: "",
-  username: ''
+  username: '',
+  isConnected: false,
 };
 
 
@@ -18,6 +19,12 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         userID: action.payload.userID
+      }
+    }
+    case gmC.SET_CONNECTION: {
+      return {
+        ...state,
+        isConnected: action.payload.isConnected
       }
     }
     default: {

@@ -3,11 +3,11 @@ import PlayerList from './PlayerList';
 import GameChat from './GameChat';
 
 
-function PlayerArea() {
+function PlayerArea({onPlayerKick}) {
   return (
     <div>
       Player Area
-      <PlayerList></PlayerList>
+      <PlayerList onPlayerKick={onPlayerKick}></PlayerList>
       <GameChat></GameChat>
     </div>
   )

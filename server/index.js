@@ -40,7 +40,7 @@ io.use((socket, next) => {
   }
   const username = socket.handshake.auth.username;
   if (!username) {
-    return next(new Error("invalid username"));
+    return next(new Error("invalid username, session not found"));
   }
   socket.sessionID = randomId();
   socket.userID = randomId();
@@ -49,44 +49,62 @@ io.use((socket, next) => {
 });
 
 io.on("connection", function (socket) {
+  console.log("New connection: " + socket.id);
   sessionStore.saveSession(socket.sessionID, {
     username: socket.username,
     userID: socket.userID,
     connected: true,
     socket: socket,
   })
+
   socket.emit("session", {
     sessionID: socket.sessionID,
     userID: socket.userID,
     username: socket.username
   })
+  socket.on("room:kickPlayer", userID => {
+    let roomID = socket.roomID;
+    roomStore.kickUser(roomID, userID);
+  });
   socket.on("room:host", (callback) => {
     let roomID = roomStore.createNewRoom({
       userID: socket.userID,
-      username: socket.username
+      username: socket.username,
+      socketID: socket.id,
     }, true); // true => room opened
     callback(roomID)
   })
+  socket.on("room:isRoomExist", (room, callback) => {
+    let response = roomStore.isRoomAvailable(room.roomID);
+    callback(response);
+  });
   socket.on("room:join", (room, callback) => {
-    let hostID = roomStore.joinRoom({
+    let newUser = {
       userID: socket.userID,
-      username: socket.username
-    }, room.roomID);
+      username: socket.username,
+      socketID: socket.id,
+    };
+    let response = roomStore.joinRoom(newUser, room.roomID);
     let users = [];
-    if (hostID) {
+    if (response.status === "success") {  
       socket.roomID = room.roomID;
       users = roomStore.getRoomUsers(room.roomID);
+      users.forEach((user) => {
+        socket.to(user.socketID).emit("room:userJoin", newUser);
+      });
+      callback({
+        response,
+        users,
+      });
+    } else {
+      callback({response});
     }
-    callback({
-      hostID: hostID,
-      roomStore,
-      users,
-    });
   })
+  socket.on("room:leave", () => {
+    socketLeaveRoom(socket);
+  });
   socket.on("disconnect", () => {
-    if (socket.roomID) {
-      roomStore.leaveRoom(socket.userID, socket.roomID);
-    }
+    socketLeaveRoom(socket);
   })
 });
 
@@ -94,7 +112,14 @@ http.listen(PORT, () => {
   console.log("Server has been started on " + PORT);
 });
 
-const returnRoomID = (roomID, socket) => {
-  socket.emit("room:host", roomID);
+const socketLeaveRoom = (socket) => {
+  if (socket.roomID) {
+    let hostID = roomStore.leaveRoom(socket.userID, socket.roomID);
+    if (hostID) {
+      let users = roomStore.getRoomUsers(socket.roomID);
+      users.forEach((user) => {
+        socket.to(user.socketID).emit("room:userLeave", socket.userID);
+      });
+    }
+  }
 }
-

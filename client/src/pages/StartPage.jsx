@@ -1,16 +1,21 @@
 import React from 'react'
 import { Logo, UserSettings, UserControls } from '../components';
 
-function StartPage({ onFindGameClick, onNewGameClick }) {
-  const inputRef = React.useRef();
+function StartPage({ onFindGameClick, onNewGameClick, onJoibByCodeClick}) {
+
   const handleQuickGameClick = () => {
-    onFindGameClick(inputRef.current.value)
+    onFindGameClick()
   }
+  
   return (
     <div>
       <Logo />
-      <UserSettings inputRef={inputRef}/>
-      <UserControls onNewGameClick={onNewGameClick} onQuickGameClick={handleQuickGameClick}/>
+      <UserSettings />
+      <UserControls
+        onNewGameClick={onNewGameClick}
+        onQuickGameClick={handleQuickGameClick}
+        onJoibByCodeClick={onJoibByCodeClick}
+      />
     </div>
   )
 }
