@@ -2,8 +2,8 @@ import React from 'react'
 
 function SettingsBar() {
   return (
-    <div>
-      SettingsBar
+    <div className="settings-bar-block">
+      
     </div>
   )
 }

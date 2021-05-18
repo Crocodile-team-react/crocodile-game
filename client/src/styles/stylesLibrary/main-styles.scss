@@ -2,6 +2,7 @@ $main-color: #22B14C;
 $hover-color: #1F993F;
 $background-color: #9BECB3;
 $chat-color: #000;
+$background-gray: #F1F1F1;
 
 @font-face {
   font-family: "DoloresCyr";
@@ -118,18 +119,16 @@ $chat-color: #000;
 }
 
 .input {
+  width: 300px;
   height: 40px;
   padding-left: 10px;
   padding-right: 10px;
   border: none;
   background-image: url("./images/input.svg");
   background-repeat: no-repeat;
+  background-color: transparent;
   font-size: 14px;
   color: $main-color;
-}
-
-.input {
-  width: 300px;
 }
 
 .form-with-inp-but {
@@ -149,6 +148,7 @@ $chat-color: #000;
 
 .avatar-big,
 .avatar-small {
+  display: block;
   border-radius: 50%;
   border: 2px solid $main-color;
   background-size: contain;
@@ -186,12 +186,6 @@ $chat-color: #000;
   background-image: url("./images/coin.svg");
 }
 
-.background {
-  width: 100%;
-  height: 100%;
-  background: no-repeat center/ cover url("./images/background.png");
-}
-
 .button-short-filled.copy {
   position: relative;
 
@@ -206,7 +200,8 @@ $chat-color: #000;
   }
 }
 
-.logo-big, .logo-small {
+.logo-big, 
+.logo-small {
   background: no-repeat center/ contain url("./images/logo.png");
 }
 
@@ -233,13 +228,16 @@ $chat-color: #000;
 }
 
 .letter {
+  display: inline-block;
   width: 15px;
   height: 15px;
   border: 1px solid $main-color;
   border-radius: 2px;
   background-color: white;
   text-align: center;
+  text-transform: uppercase;
   font-size: 12px;
+  font-weight: 800;
 }
 
 .foot {

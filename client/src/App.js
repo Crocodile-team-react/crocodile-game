@@ -7,14 +7,18 @@ function App() {
   const generateGameLobbyId = () => {
     return (Math.random() * 1e17).toString();
   }
+
+  let links = (
+  <ul>
+    <li><Link to="/">Start page</Link></li>
+    <li><Link to={"/game/" + generateGameLobbyId()}>Game page</Link></li>
+    <li><Link to="/whatTheHeck">Not Found page</Link></li>
+  </ul>
+  );
+
   return (
     <Router>
       <div className="app">
-        <ul>
-          <li><Link to="/">Start page</Link></li>
-          <li><Link to={"/game/" + generateGameLobbyId()}>Game page</Link></li>
-          <li><Link to="/whatTheHeck">Not Found page</Link></li>
-        </ul>
         <Switch>
           <Route path="/" exact>
             <StartPage />

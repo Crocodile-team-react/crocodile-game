@@ -1,15 +1,16 @@
-import React from 'react'
+import React from 'react';
 import { PlayerArea, DrawingArea, Logo } from '../components';
 
 function GamePage() {
   return (
-    <div>
-      Game Page
-      <Logo></Logo>
+    <div className="game-page-block">
+      <Logo>
+        <span className="logo-small"></span>
+      </Logo>
       <DrawingArea></DrawingArea>
       <PlayerArea></PlayerArea>
     </div>
-  )
+  );
 }
 
-export default GamePage
+export default GamePage;

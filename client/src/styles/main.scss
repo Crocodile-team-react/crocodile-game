@@ -1,3 +1,25 @@
-body {
-  background-color: darkcyan;
+@import './stylesLibrary/main-styles.scss';
+@import './componentsStyles/user-settings.scss';
+@import './componentsStyles/user-controls.scss';
+@import './componentsStyles/logo.scss';
+@import './componentsStyles/canvas.scss';
+@import './componentsStyles/avatar.scss';
+@import './componentsStyles/letter.scss';
+@import './componentsStyles/timer.scss';
+@import './componentsStyles/colors-bar.scss';
+
+@import './pageStyles/start-page.scss';
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: no-repeat center/ cover url("./stylesLibrary/images/background.png");
+}
+
+.app {
+  max-width: 1100px;
 }
