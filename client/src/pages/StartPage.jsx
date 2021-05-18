@@ -1,6 +1,5 @@
 import React from 'react'
 import { Logo, UserSettings, UserControls } from '../components';
-import '../styles/stylesLibrary/main-styles.scss'
 
 function StartPage() {
   return (
