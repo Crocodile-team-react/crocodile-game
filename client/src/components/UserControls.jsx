@@ -12,13 +12,15 @@ function UserControls({ onQuickGameClick, onNewGameClick, onJoibByCodeClick }) {
     }
   }
   return (
-    <div>
-      <button onClick={onQuickGameClick}>Quick game</button>
-      <span>OR</span>
-      <button onClick={onNewGameClick}>New room</button>
-      <span>OR</span>
-      <input ref={inputRef} type="text" placeholder="join by link" />
-      <button onClick={onJoinByCode}>OK</button>
+    <div className="controls-block">
+      <button className='button-long-filled' onClick ={onQuickGameClick}>Быстрая игра</button>
+      <span>...или...</span>
+      <button className='button-long-filled' onClick ={onNewGameClick}>Создать комнату</button>
+      <span>...или...</span>
+      <form className="form-with-inp-but">
+        <input ref={inputRef} type="text" className="input" placeholder="Ссылка на комнату"/>
+        <button className="button-short-filled" type="submit" onClick={onJoinByCode}>Ок</button>
+      </form>
     </div>
   )
 }

@@ -147,20 +147,6 @@ function App() {
   }
   return (
     <div className="app">
-      <ul>
-        <li>
-          <Link to="/">Start page</Link>
-        </li>
-        <li>
-          <Link to={"/game/" + (Math.random() * 1e17).toString()}>
-            Game page
-          </Link>
-        </li>
-        <li>
-          <Link to="/whatTheHeck">Not Found page</Link>
-        </li>
-        <button onClick={getRoomsInfo}>get rooms info</button>
-      </ul>
       <Switch>
         <Route path="/" exact>
           <StartPage

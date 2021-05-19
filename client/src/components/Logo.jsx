@@ -1,9 +1,9 @@
 import React from 'react'
 
-function Logo() {
+function Logo(props) {
   return (
-    <div>
-      Logo
+    <div className="logo-block">
+      {props.children}
     </div>
   )
 }

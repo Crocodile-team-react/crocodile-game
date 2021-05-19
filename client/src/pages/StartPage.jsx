@@ -17,8 +17,10 @@ function StartPage({ onFindGameClick, onNewGameClick, onJoibByCodeClick, socketG
     });
   }, [])
   return (
-    <div>
-      <Logo />
+    <div className="start-page-block">
+      <Logo>
+        <span className="logo-big"></span>
+      </Logo>
       <UserSettings />
       <UserControls
         onNewGameClick={onNewGameClick}

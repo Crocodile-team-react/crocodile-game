@@ -3,6 +3,8 @@ import { gmC } from "../helpers/constants";
 const initialState = {
   userID: "",
   username: '',
+  pointCount: 0,
+  avatar: "avatar-cat",
   isConnected: false,
 };
 

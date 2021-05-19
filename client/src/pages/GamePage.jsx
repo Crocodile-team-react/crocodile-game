@@ -1,7 +1,8 @@
 import React from 'react'
-import { PlayerArea, DrawingArea, Logo } from '../components';
 import { useParams } from 'react-router-dom'  
-import NotFoundPage from './NotFoundPage';
+import RoomNotFound from '../components/modal/RoomNotFound';
+import ChooseModal from '../components/modal/ChooseModal';
+import { PlayerArea, DrawingArea, Logo } from '../components';
 
 function GamePage({onLobbyLoading, onPlayerKick}) {
   let { roomID } = useParams();
@@ -13,11 +14,15 @@ function GamePage({onLobbyLoading, onPlayerKick}) {
   }, [roomID])
 
   return (
-    <div>
-      Game Page
-      <Logo></Logo>
-      <DrawingArea></DrawingArea>
-      <PlayerArea onPlayerKick={onPlayerKick}></PlayerArea>
+    <div className="game-page-block">
+      <Logo>
+        <button className="button-short-unfilled" onClick={f=>f}>Назад</button>
+        <span className="logo-small"></span>
+      </Logo>
+      <DrawingArea/>
+      <PlayerArea onPlayerKick={onPlayerKick}/>
+      {/*<RoomNotFound></RoomNotFound>*/}
+      {/* <ChooseModal></ChooseModal> */}
     </div>
   )
 }

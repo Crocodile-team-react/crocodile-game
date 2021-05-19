@@ -12,12 +12,20 @@ function UserSettings() {
     }
   }
   return (
-    <div>
-      <div>
-        <span>Choose icon here</span>
+    <div className="settings-block"> 
+      <div className="settings-block__avatar">
+        <button className="arrow-left"></button>
+        <span className="avatar-big avatar-goose"></span>
+        <button className="arrow-right"></button>
       </div>
-      <input onBlur={changeName} ref={inputRef}
-        type="text" name="name" placeholder="Your name" defaultValue={username} />
+      <div className="settings-block__name">
+        <input
+          onBlur={changeName} ref={inputRef}
+          type="text" className="input"
+          placeholder="Ваше имя"
+          defaultValue={username}
+        />
+      </div>
     </div>
   )
 }

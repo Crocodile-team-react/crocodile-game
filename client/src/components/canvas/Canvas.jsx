@@ -1,9 +1,10 @@
 import React from 'react'
 
-function Canvas() {
+function Canvas(props) {
   return (
-    <div className="canvas">
-      canvas
+    <div className="canvas-block">
+      {props.children}
+      <canvas width="700" height="445"></canvas>
     </div>
   )
 }
