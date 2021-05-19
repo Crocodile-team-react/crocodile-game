@@ -1,15 +1,14 @@
-import randomId from './random.js';
+import randomId from "./random.js";
 const maxRoomUsers = 2;
 
 class RoomStore {
   createNewRoom(host, isRoomOpen) {}
   getAllOpenedRooms() {}
-  joinRoom(user, roomID) {}
-  leaveRoom(userID, roomID) {}
+  joinRoom(roomID, user) {}
+  leaveRoom(roomID, userID) {}
   findOpenRoom() {}
-  getRoomUsers(roomID) {}
-  isRoomAvailable(roomID) { }
-  kickUser(roomID, userID) {}
+  isRoomAvailable(roomID, userID) {}
+  kickUser(roomID, hostID, userID) {}
 }
 
 export class InMemoryRoomStore extends RoomStore {
@@ -19,60 +18,77 @@ export class InMemoryRoomStore extends RoomStore {
       openedRoomsID: [],
       allRooms: {},
     };
+    this.kickUser = this.roomDecorator(this.kickUser);
+    this.isRoomAvailable = this.roomDecorator(this.isRoomAvailable);
+    this.leaveRoom = this.roomDecorator(this.leaveRoom);
+    this.getRoomUsers = this.roomDecorator(this.getRoomUsers);
   }
-  kickUser(roomID, userID) {
-    
-  }
-  isRoomAvailable(roomID) {
-    let response = {
-      type: "error",
-    };
-    if (roomID in this.rooms.allRooms) {
-      if (this.rooms.allRooms[roomID].users.length >= maxRoomUsers) {
-        response.message = "Room is full";
-        return response;
-      }
-      response.type = "success";
-      response.message = "Room is exist";
-      return response;
-    } else {
-      response.message = "Room is not exist";
+  kickUser(roomID, hostID, userID) {
+    let room = this.rooms.allRooms[roomID];
+    if (hostID === room.roomHostID) {
+      let removedUser = this.leaveRoom(roomID, userID);
+      room.blockedUsersID.push(userID);
+      let response = {
+        status: "success",
+        message: "User was kicked from lobby",
+        removedUser: removedUser,
+      };
       return response;
     }
+    let response = {
+      status: "error",
+      message: "SocketID is not equal to RoomHostID",
+    };
+    return response;
   }
   getRoomUsers(roomID) {
     return this.rooms.allRooms[roomID].users;
   }
-  leaveRoom(userID, roomID) {
-    if (roomID in this.rooms.allRooms) {
-      const newRoomUsers = this.rooms.allRooms[roomID].users.filter(
-        (user) => user.userID !== userID
-      );
-      this.rooms.allRooms[roomID].users = newRoomUsers;
-      return this.rooms.allRooms[roomID].roomHostID;
+  isRoomAvailable(roomID, userID) {
+    if (this.rooms.allRooms[roomID].users.length >= maxRoomUsers) {
+      let response = {
+        status: "error",
+        message: "Room is full",
+      };
+      return response;
     }
-    return false;
-  }
-  joinRoom(user, roomID) {
+    if (this.rooms.allRooms[roomID].blockedUsersID.indexOf(userID) !== -1) {
+      let response = {
+        status: "error",
+        message: "You was kicked from this lobby",
+      };
+      return response;
+    }
     let response = {
-      status: "error",
+      status: "success",
+      message: "Room is exist",
     };
-    if (roomID in this.rooms.allRooms) {
-      if (this.rooms.allRooms[roomID].users.length >= maxRoomUsers) {
-        response.message = "Room is full";
-        return response;
+    return response;
+  }
+  leaveRoom(roomID, userID) {
+    let removedUser = null;
+    const newRoomUsers = this.rooms.allRooms[roomID].users.filter((user) => {
+      if (user.userID !== userID) {
+        return true;
       } else {
-        this.rooms.allRooms[roomID].users.push({
-          username: user.username,
-          userID: user.userID,
-          socketID: user.socketID,
-        });
-        response.hostID = this.rooms.allRooms[roomID].roomHostID;
-        response.status = "success";
-        return response;
+        removedUser = user;
+        return false;
       }
+    });
+    this.rooms.allRooms[roomID].users = newRoomUsers;
+    return removedUser;
+  }
+  joinRoom(roomID, user) {
+    let response = this.isRoomAvailable(roomID, user.userID);
+    if (response.status === "success") {
+      this.rooms.allRooms[roomID].users.push({
+        username: user.username,
+        userID: user.userID,
+        socketID: user.socketID,
+      });
+      response.hostID = this.rooms.allRooms[roomID].roomHostID;
+      return response;
     }
-    response.message = "Room is not exist";
     return response;
   }
   getAllOpenedRooms() {
@@ -84,6 +100,7 @@ export class InMemoryRoomStore extends RoomStore {
       roomHostID: host.userID,
       roomHostSocketID: host.socketID,
       users: [],
+      blockedUsersID: [],
       isRoomOpen: isRoomOpen,
     };
     this.rooms.allRooms[room.roomID] = room;
@@ -93,4 +110,18 @@ export class InMemoryRoomStore extends RoomStore {
     return room.roomID;
   }
   findOpenRoom() {}
+
+  roomDecorator(func) {
+    return function (roomID, ...rest) {
+      if (roomID in this.rooms.allRooms) {
+        return func.call(this, roomID, ...rest);
+      } else {
+        let response = {
+          status: "error",
+          message: "Room is not exist",
+        };
+        return response;
+      }
+    };
+  }
 }

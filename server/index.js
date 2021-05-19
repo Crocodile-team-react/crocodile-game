@@ -56,15 +56,25 @@ io.on("connection", function (socket) {
     connected: true,
     socket: socket,
   })
-
   socket.emit("session", {
     sessionID: socket.sessionID,
     userID: socket.userID,
     username: socket.username
   })
+  socket.on("room:getInfo", callback => {
+    callback(roomStore);
+  });
   socket.on("room:kickPlayer", userID => {
     let roomID = socket.roomID;
-    roomStore.kickUser(roomID, userID);
+    let hostID = socket.userID;
+    let response = roomStore.kickUser(roomID, hostID, userID);
+    if (response.status === "success") {
+      io.to(response.removedUser.socketID).emit("room:kicked");
+      let users = roomStore.getRoomUsers(socket.roomID);
+      users.forEach((user) => {
+        io.to(user.socketID).emit("room:userKicked", userID);
+      });
+    }
   });
   socket.on("room:host", (callback) => {
     let roomID = roomStore.createNewRoom({
@@ -84,7 +94,7 @@ io.on("connection", function (socket) {
       username: socket.username,
       socketID: socket.id,
     };
-    let response = roomStore.joinRoom(newUser, room.roomID);
+    let response = roomStore.joinRoom(room.roomID, newUser);
     let users = [];
     if (response.status === "success") {  
       socket.roomID = room.roomID;
@@ -114,8 +124,8 @@ http.listen(PORT, () => {
 
 const socketLeaveRoom = (socket) => {
   if (socket.roomID) {
-    let hostID = roomStore.leaveRoom(socket.userID, socket.roomID);
-    if (hostID) {
+    let removedUser = roomStore.leaveRoom(socket.roomID, socket.userID);
+    if (removedUser) {
       let users = roomStore.getRoomUsers(socket.roomID);
       users.forEach((user) => {
         socket.to(user.socketID).emit("room:userLeave", socket.userID);

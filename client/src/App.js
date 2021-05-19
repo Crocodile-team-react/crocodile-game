@@ -19,17 +19,6 @@ function App() {
   const socket = React.useRef(io(c.SERVER_URL, { autoConnect: false }));
 
   React.useEffect(() => {
-    socketGetConnection(true, 2000).then(response => {
-      if (response) {
-        console.log("Connection established"); // handle success connection
-      }
-    }).catch(msg => {
-      if (msg instanceof Error) {
-        console.error(msg.message); // handle reject connection
-      } else {
-        console.warn(msg);
-      }
-    });
     socket.current.onAny((msg, body) => {
       console.log(msg, body);
     });
@@ -37,9 +26,19 @@ function App() {
       dispatch(addUser(user));
     });
     socket.current.on("room:userLeave", (userID) => {
+      console.log("user left" + userID); // additional opportunity to handle
       dispatch(removeUser(userID));
     })
-
+    socket.current.on("room:userKicked", (userID) => { //someone else was kicked
+      console.log("user was kicked " + userID); // additional opportunity to handle
+      dispatch(removeUser(userID));
+    })
+    socket.current.on("room:kicked", () => { // you was kicked
+      console.log("you was kicked from lobby");
+      dispatch(setRoomID(""));
+      dispatch(setUsers([]));
+      history.push("/");
+    })
     return () => {
       socket.current.disconnect();
     };
@@ -55,13 +54,14 @@ function App() {
     socket.current.emit("room:leave");
    };
   const handlePlayerKick = (userID) => {
-    socket.emit("room:kickPlayer", userID);
+    socket.current.emit("room:kickPlayer", userID);
   };
   const socketGetConnection = (initialConnection = false, timeout = 10000) => {
     return new Promise((resolve, reject) => {
       if ((initialConnection && sessionID) || username) {
         if (socket.current.connected) {
           resolve(true);
+          return;
         }
         let timer;
         socket.current.auth = {
@@ -101,7 +101,6 @@ function App() {
       }
     });
   };
-
   const handleFindGameClick = () => {
     if (!isConnected) {
       socketGetConnection();
@@ -109,7 +108,9 @@ function App() {
       
     }
   };
-
+  const handleJoinByCode = (code) => {
+    history.push("/game/" + code);
+  }
   const handleNewGameClick = () => {
     socketGetConnection().then(() => {
       socket.current.emit("room:host", (url) => {
@@ -117,24 +118,6 @@ function App() {
       });
     })
   };
-  const hanldeJoinByCode = (code) => {
-    socketGetConnection(false, 2000)
-      .then((connected) => {
-        socket.current.emit("room:isRoomExist", { roomID: code }, (response) => {
-          if (response.type === "error") {
-            console.error(response.message) // here we can handle error when room is not exist for example
-          }
-          if (response.type === "success") {
-            history.push("/game/" + code); // room is exist
-          }
-        });
-      })
-      .catch((msg) => {
-        if (msg === errMsg.sessionNotFound) {
-          console.log("Player need input username before connection"); // here we can show modal
-        }
-      })
-  }
   const handleLobbyLoading = (roomID) => {
     socketGetConnection(true, 2000)
       .then((connected) => {
@@ -157,7 +140,11 @@ function App() {
         }
       });
   };
-
+  const getRoomsInfo = () => {
+    socket.current.emit("room:getInfo", (response) => {
+      console.log(response);
+    })
+  }
   return (
     <div className="app">
       <ul>
@@ -172,13 +159,15 @@ function App() {
         <li>
           <Link to="/whatTheHeck">Not Found page</Link>
         </li>
+        <button onClick={getRoomsInfo}>get rooms info</button>
       </ul>
       <Switch>
         <Route path="/" exact>
           <StartPage
+            socketGetConnection={socketGetConnection}
             onNewGameClick={handleNewGameClick}
             onFindGameClick={handleFindGameClick}
-            onJoibByCodeClick={hanldeJoinByCode}
+            onJoibByCodeClick={handleJoinByCode}
           />
         </Route>
         <Route path="/game/:roomID" exact>
