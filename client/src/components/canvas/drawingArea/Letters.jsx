@@ -4,14 +4,14 @@ import Letter from './Letter';
 function Letters(props) {
   return (
     <span className="letters-block">
-      <Letter value=""></Letter>
-      <Letter value=""></Letter>
-      <Letter value="о"></Letter>
-      <Letter value=""></Letter>
-      <Letter value=""></Letter>
-      <Letter value=""></Letter>
-      <Letter value="и"></Letter>
-      <Letter value=""></Letter>
+      <Letter></Letter>
+      <Letter></Letter>
+      <Letter>о</Letter>
+      <Letter></Letter>
+      <Letter></Letter>
+      <Letter></Letter>
+      <Letter>и</Letter>
+      <Letter></Letter>
     </span>
   );
 }

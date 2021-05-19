@@ -1,14 +1,20 @@
 import React from 'react';
+import RoomNotFound from '../components/modal/RoomNotFound';
+import ChooseModal from '../components/modal/ChooseModal';
 import { PlayerArea, DrawingArea, Logo } from '../components';
 
 function GamePage() {
   return (
     <div className="game-page-block">
       <Logo>
+        <button className="button-short-unfilled" onClick={f=>f}>Назад</button>
         <span className="logo-small"></span>
       </Logo>
-      <DrawingArea></DrawingArea>
-      <PlayerArea></PlayerArea>
+      <DrawingArea/>
+      <PlayerArea/>
+      {/*<RoomNotFound></RoomNotFound>*/}
+      {/*<ChooseModal></ChooseModal>*/}
+      {/*<ChooseModal></ChooseModal>*/}
     </div>
   );
 }

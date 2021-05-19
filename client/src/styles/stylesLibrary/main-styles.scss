@@ -3,6 +3,7 @@ $hover-color: #1F993F;
 $background-color: #9BECB3;
 $chat-color: #000;
 $background-gray: #F1F1F1;
+$background-player: #4FAA69;
 
 @font-face {
   font-family: "DoloresCyr";
@@ -26,6 +27,7 @@ $background-gray: #F1F1F1;
 
 .button-long-filled,
 .button-medium-unfilled,
+.button-medium-filled,
 .button-short-filled,
 .button-short-unfilled,
 .arrow-left,
@@ -72,6 +74,17 @@ $background-gray: #F1F1F1;
 
   &:hover {
     background-image: url("./images/button-short-filled-hover.svg");
+  }
+}
+
+.button-medium-filled {
+  width: 130px;
+  height: 40px;
+  color: white;
+  background-image: url("./images/button-medium-filled.svg");
+
+  &:hover {
+    background-image: url("./images/button-medium-filled-hover.svg");
   }
 }
 
@@ -257,6 +270,7 @@ $background-gray: #F1F1F1;
   display: inline-block;
   width: 14px;
   height: 14px;
+  margin-right: 8px;
   background: no-repeat center/ contain url("./images/unchecked.svg");
 }
 
@@ -289,4 +303,44 @@ $background-gray: #F1F1F1;
   font-weight: 800;
   line-height: 17px;
   color: $main-color;
+}
+
+.pencil {
+  background: no-repeat center/ contain url("./images/pencil.svg");    
+}
+
+.rubber {
+  background: no-repeat center/ contain url("./images/rubber.svg");    
+}
+
+.square {
+  background: no-repeat center/ contain url("./images/square.svg");    
+}
+
+.circle {
+  background: no-repeat center/ contain url("./images/circle.svg");    
+}
+
+.square-fill {
+  background: no-repeat center/ contain url("./images/square-fill.svg");    
+}
+
+.circle-fill {
+  background: no-repeat center/ contain url("./images/circle-fill.svg");    
+}
+
+.line {
+  background: no-repeat center/ contain url("./images/line.svg");    
+}
+
+.fill {
+  background: no-repeat center/ contain url("./images/fill.svg");    
+}
+
+.arrow-previous {
+  background: no-repeat center/ contain url("./images/arrow-previous.svg"); 
+}
+
+.arrow-next {
+  background: no-repeat center/ contain url("./images/arrow-next.svg"); 
 }
