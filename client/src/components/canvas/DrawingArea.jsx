@@ -18,7 +18,7 @@ function DrawingArea() {
         <ColorsBar/>
       </Canvas>
       <ToolBar/>
-      <WinnerModal></WinnerModal>
+      {/* <WinnerModal></WinnerModal> */}
     </div>
   );
 }

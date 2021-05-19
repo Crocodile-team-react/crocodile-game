@@ -9,7 +9,7 @@ function PlayerArea() {
       <PlayerList/>
       {/*<GameChat/>*/}
       {/*Host*/}
-      {/*<div className="start-game-block">
+      {/* <div className="start-game-block">
         <div className="start-game-block__private">
           <input id="in" type="checkbox" className="checkbox"/>
           <label htmlFor="in">
@@ -20,8 +20,8 @@ function PlayerArea() {
           <button className="button-medium-unfilled" onClick={f=>f}>Пригласить</button>
           <button className="button-medium-filled" onClick={f=>f}>Начать</button>
         </div>
-      </div>
-      */}
+      </div> */}
+     
       {/*Player*/}
       <div className="start-game-block">
         <p className="text">Ждем когда ведущий запустит игру...</p>

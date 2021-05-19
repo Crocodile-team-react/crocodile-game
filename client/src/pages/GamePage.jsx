@@ -1,7 +1,7 @@
 import React from 'react';
 import RoomNotFound from '../components/modal/RoomNotFound';
 import ChooseModal from '../components/modal/ChooseModal';
-import { PlayerArea, DrawingArea, Logo } from '../components';
+import { PlayerArea, DrawingArea, Logo, Modal } from '../components';
 
 function GamePage() {
   return (
@@ -13,8 +13,7 @@ function GamePage() {
       <DrawingArea/>
       <PlayerArea/>
       {/*<RoomNotFound></RoomNotFound>*/}
-      {/*<ChooseModal></ChooseModal>*/}
-      {/*<ChooseModal></ChooseModal>*/}
+      {/* <ChooseModal></ChooseModal> */}
     </div>
   );
 }
