@@ -27,4 +27,13 @@ export const setConnection = (isConnected) => {
   }
 }
 
+export const setIsAdmin = (isAdmin) => {
+    return {
+      type: gmC.SET_IS_ADMIN,
+      payload: {
+        isAdmin
+      }
+    }
+  }
+
 

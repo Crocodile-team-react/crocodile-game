@@ -4,8 +4,9 @@ const initialState = {
   userID: "",
   username: '',
   pointCount: 0,
-  avatar: "avatar-cat",
+  avatar: "avatar-crocodile",
   isConnected: false,
+  isAdmin: false
 };
 
 
@@ -29,6 +30,12 @@ export const userReducer = (state = initialState, action) => {
         isConnected: action.payload.isConnected
       }
     }
+    case gmC.SET_IS_ADMIN: {
+        return {
+          ...state,
+          isAdmin: action.payload.isAdmin
+        }
+      }
     default: {
       return state;
     }

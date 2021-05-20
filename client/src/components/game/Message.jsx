@@ -1,10 +1,15 @@
 import React from 'react'
 
-function Message() {
+function Message(props) {
   return (
-    <div>
-      Message
-    </div>
+    <li className="item">
+      <span className="from">
+        {props.from?props.from+": ":""}
+      </span>
+      <span className="text">
+        {props.children}
+      </span>
+    </li>
   )
 }
 

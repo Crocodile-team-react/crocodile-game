@@ -1,7 +1,7 @@
 import React from 'react'
 import { Logo, UserSettings, UserControls } from '../components';
 
-function StartPage({ onFindGameClick, onNewGameClick, onJoibByCodeClick, socketGetConnection}) {
+function StartPage({ onFindGameClick, onNewGameClick, onJoinByCodeClick, socketGetConnection}) {
 
   const handleQuickGameClick = () => {
     onFindGameClick()
@@ -25,7 +25,7 @@ function StartPage({ onFindGameClick, onNewGameClick, onJoibByCodeClick, socketG
       <UserControls
         onNewGameClick={onNewGameClick}
         onQuickGameClick={handleQuickGameClick}
-        onJoibByCodeClick={onJoibByCodeClick}
+        onJoinByCodeClick={onJoinByCodeClick}
       />
     </div>
   )

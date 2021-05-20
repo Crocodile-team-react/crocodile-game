@@ -1,6 +1,6 @@
 import React from 'react'
 
-function UserControls({ onQuickGameClick, onNewGameClick, onJoibByCodeClick }) {
+function UserControls({ onQuickGameClick, onNewGameClick, onJoinByCodeClick }) {
   const inputRef = React.useRef();
 
   const onJoinByCode = () => {
@@ -8,7 +8,7 @@ function UserControls({ onQuickGameClick, onNewGameClick, onJoibByCodeClick }) {
     if (code === null) {
       console.error("incorrect code value"); // need handle
     } else {
-      onJoibByCodeClick(code);
+      onJoinByCodeClick(code);
     }
   }
   return (

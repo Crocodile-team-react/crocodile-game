@@ -4,7 +4,7 @@ import { StartPage, GamePage, NotFoundPage } from './pages';
 import { useHistory, Switch, Route, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers, setRoomID, addUser, removeUser, setRoomHostID } from "./store/actions/gameActions";
-import { setUsername, setUserID, setConnection } from "./store/actions/userActions";
+import { setUsername, setUserID, setConnection, setIsAdmin } from "./store/actions/userActions";
 import { io } from 'socket.io-client';
 import { useLocalStorage, c, errMsg } from './helpers';
 
@@ -24,6 +24,7 @@ function App() {
     });
     socket.current.on("room:userJoin", (user) => {
       dispatch(addUser(user));
+      console.log(user);
     });
     socket.current.on("room:userLeave", (userID) => {
       console.log("user left" + userID); // additional opportunity to handle
@@ -116,6 +117,7 @@ function App() {
       socket.current.emit("room:host", (url) => {
         history.push("/game/" + url);
       });
+      dispatch(setIsAdmin(true));
     })
   };
   const handleLobbyLoading = (roomID) => {
@@ -153,7 +155,7 @@ function App() {
             socketGetConnection={socketGetConnection}
             onNewGameClick={handleNewGameClick}
             onFindGameClick={handleFindGameClick}
-            onJoibByCodeClick={handleJoinByCode}
+            onJoinByCodeClick={handleJoinByCode}
           />
         </Route>
         <Route path="/game/:roomID" exact>
