@@ -27,4 +27,13 @@ export const setConnection = (isConnected) => {
   }
 }
 
+export const setAvatar = (avatarID) => {
+  return {
+    type: gmC.SET_AVATAR,
+    payload: {
+      avatarID
+    }
+  }
+}
+
 

@@ -3,8 +3,7 @@ import { gmC } from "../helpers/constants";
 const initialState = {
   userID: "",
   username: '',
-  pointCount: 0,
-  avatar: "avatar-cat",
+  avatarID: 0,
   isConnected: false,
 };
 
@@ -28,6 +27,12 @@ export const userReducer = (state = initialState, action) => {
         ...state,
         isConnected: action.payload.isConnected
       }
+    }
+    case gmC.SET_AVATAR: {
+      return {
+        ...state,
+        avatarID: action.payload.avatarID,
+      };
     }
     default: {
       return state;

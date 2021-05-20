@@ -1,27 +1,43 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'  
-import RoomNotFound from '../components/modal/RoomNotFound';
-import ChooseModal from '../components/modal/ChooseModal';
-import { PlayerArea, DrawingArea, Logo } from '../components';
+import { PlayerArea, DrawingArea, Logo, WarningModal, ChooseModal } from '../components';
+import { Link } from 'react-router-dom';
 
 function GamePage({onLobbyLoading, onPlayerKick}) {
   let { roomID } = useParams();
   const [loading, setLoading] = React.useState(true);
+  const [isRoomFound, setRoomFound] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState({});
 
   React.useEffect(() => {
-    console.log('gamepage');
-    onLobbyLoading(roomID)
+    onLobbyLoading(roomID, setLoading, setRoomFound, setErrorMessage);
   }, [roomID])
 
   return (
     <div className="game-page-block">
-      <Logo>
-        <button className="button-short-unfilled" onClick={f=>f}>Назад</button>
-        <span className="logo-small"></span>
-      </Logo>
-      <DrawingArea/>
-      <PlayerArea onPlayerKick={onPlayerKick}/>
-      {/*<RoomNotFound></RoomNotFound>*/}
+      {
+        loading ?
+          <div>Loading</div> :
+          !isRoomFound ?
+            <WarningModal title={errorMessage.title} body={errorMessage.body} >
+              <Link to="/">
+                <button className="button-medium-filled">Ладно</button>
+              </Link>
+            </WarningModal>  
+            :
+            <div className="game-page-block__content">
+              <Logo>
+                <Link to="/" >
+                  <button className="button-short-unfilled">
+                      Назад
+                  </button>
+                </Link>
+                <span className="logo-small"></span>
+              </Logo>
+              <DrawingArea/>
+              <PlayerArea onPlayerKick={onPlayerKick}/>
+            </div>
+      }
       {/* <ChooseModal></ChooseModal> */}
     </div>
   )

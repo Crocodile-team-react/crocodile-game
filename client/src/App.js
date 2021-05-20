@@ -4,19 +4,20 @@ import { StartPage, GamePage, NotFoundPage } from './pages';
 import { useHistory, Switch, Route, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers, setRoomID, addUser, removeUser, setRoomHostID } from "./store/actions/gameActions";
-import { setUsername, setUserID, setConnection } from "./store/actions/userActions";
+import { setUsername, setUserID, setConnection, setAvatar } from "./store/actions/userActions";
 import { io } from 'socket.io-client';
 import { useLocalStorage, c, errMsg } from './helpers';
+import { WarningModal } from './components';
 
 function App() {
   const dispatch = useDispatch();
-  const username = useSelector((state) => state.user.username);
+  const user = useSelector((state) => state.user);
   const roomID = useSelector((state) => state.game.roomID);
-  const isConnected = useSelector((state) => state.user.isConnected);
   const [sessionID, setSessionID] = useLocalStorage("sessionID");
   const history = useHistory();
   const location = useLocation();
   const socket = React.useRef(io(c.SERVER_URL, { autoConnect: false }));
+  const [modalData, setModalData] = React.useState({isSeen: false, title: "", body: ""});
 
   React.useEffect(() => {
     socket.current.onAny((msg, body) => {
@@ -58,14 +59,15 @@ function App() {
   };
   const socketGetConnection = (initialConnection = false, timeout = 10000) => {
     return new Promise((resolve, reject) => {
-      if ((initialConnection && sessionID) || username) {
+      if ((initialConnection && sessionID) || user.username) {
         if (socket.current.connected) {
           resolve(true);
           return;
         }
         let timer;
         socket.current.auth = {
-          username,
+          avatarID: user.avatarID,
+          username: user.username,
           sessionID,
         };
 
@@ -74,11 +76,13 @@ function App() {
         function responseHandler(body) {
           const username = body.username;
           const userID = body.userID;
+          const avatarID = body.avatarID;
           socket.current.auth = { sessionID: body.sessionID };
           socket.current.userID = body.userID;
           setSessionID(body.sessionID);
           dispatch(setUsername(username));
           dispatch(setUserID(userID));
+          dispatch(setAvatar(avatarID));
           dispatch(setConnection(true));
           clearTimeout(timer);
           resolve(true);
@@ -97,12 +101,12 @@ function App() {
           socket.current.removeListener("session", errorHandler);
         }, timeout);
       } else {
-        reject(errMsg.sessionNotFound);
+        reject(errMsg.voidUsername);
       }
     });
   };
   const handleFindGameClick = () => {
-    if (!isConnected) {
+    if (!user.isConnected) {
       socketGetConnection();
     } else {
       
@@ -112,41 +116,68 @@ function App() {
     history.push("/game/" + code);
   }
   const handleNewGameClick = () => {
-    socketGetConnection().then(() => {
-      socket.current.emit("room:host", (url) => {
-        history.push("/game/" + url);
-      });
-    })
-  };
-  const handleLobbyLoading = (roomID) => {
-    socketGetConnection(true, 2000)
-      .then((connected) => {
-        socket.current.emit("room:join", { roomID }, ({ response, users }) => {
-          if (response.status === "error") {
-            history.push("/"); // if room not exist or any error redirect to main (/) 
-            console.error(response.message); // here we can handle error when room is not exist for example
-          }
-          if (response.status === "success") {
-            dispatch(setRoomHostID(response.hostID));
-            dispatch(setRoomID(roomID));
-            dispatch(setUsers(users));
-          }
+    socketGetConnection()
+      .then(() => {
+        socket.current.emit("room:host", (url) => {
+          history.push("/game/" + url);
         });
       })
       .catch((msg) => {
-        if (msg === errMsg.sessionNotFound) {
-          history.push("/");
-          console.log("Player need input username before connection"); // here we can show modal
+        if (msg === errMsg.voidUsername) {
+          setModalData({
+            isSeen: true,
+            title: "Ошибка",
+            body: msg,
+          }); // here we can show modal
         }
       });
   };
-  const getRoomsInfo = () => {
-    socket.current.emit("room:getInfo", (response) => {
-      console.log(response);
+  const handleLobbyLoading = (roomID, setLoading, setRoomFound, setErrorMessage) => {
+    socketGetConnection(true, 2000)
+      .then((connected) => {
+        socket.current.emit("room:join", { roomID }, ({ response, users }) => {
+          setTimeout(() => { // loading imitation
+            setLoading(false);
+            if (response.status === "error") {
+              setRoomFound(false);
+              setErrorMessage(response.message);
+            }
+            if (response.status === "success") {
+              setRoomFound(true);
+              dispatch(setRoomHostID(response.hostID));
+              dispatch(setRoomID(roomID));
+              dispatch(setUsers(users));
+            }
+          }, 1500);
+        });
+      })
+      .catch((msg) => {
+        setLoading(false);
+        if (msg.message === errMsg.voidUsername) {
+          setRoomFound(false);
+          setErrorMessage({
+            title: "Ошибка",
+            body: msg.message,
+          }); // here we can show modal
+        }
+      });
+  };
+  const closeModal = () => {
+    setModalData({
+      ...modalData,
+      isSeen: false,
     })
   }
   return (
     <div className="app">
+      {
+        modalData.isSeen ?
+          <WarningModal title={modalData.title} body={ modalData.body} >
+            <button onClick={closeModal} className="button-medium-filled">
+              Ладно
+            </button>
+          </WarningModal> : ""
+      }
       <Switch>
         <Route path="/" exact>
           <StartPage

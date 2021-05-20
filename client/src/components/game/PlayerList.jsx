@@ -10,7 +10,8 @@ function PlayerList({onPlayerKick}) {
       <ul className="player-list__block">
         {
         users &&
-        users.map(user => {
+          users.map(user => {
+            console.log(user);
           return <Player
             onPlayerKick={onPlayerKick}
             key={user.userID}

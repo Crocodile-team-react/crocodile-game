@@ -7,6 +7,7 @@ export const gmC = {
   REMOVE_USER: "REMOVE_USER",
   SET_CONNECTION: "SET_CONNECTION",
   SET_ROOM_HOSTID: "SET_ROOM_HOSTID",
+  SET_AVATAR: "SET_AVATAR",
 };
 
 
@@ -16,6 +17,14 @@ export const c = {
 };
 
 export const errMsg = {
-  sessionNotFound: "Session not found",
+  sessionNotFound: "Сессия не найдена",
   roomIsNotExist: "Room is not exist",
-}
+  voidUsername: "Пустой ник",
+};
+
+export const avatars = {
+  0: "avatar-cat",
+  1: "avatar-crocodile",
+  2: "avatar-monkey",
+  3: "avatar-goose",
+};

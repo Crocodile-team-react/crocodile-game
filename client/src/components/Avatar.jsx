@@ -1,10 +1,11 @@
 import React from 'react';
+import { avatars } from '../helpers/constants';
 
-function Avatar(props) {
+function Avatar({avatarID, username}) {
   return (
     <span className="avatar-block">
-      <span className={props.avatar + " avatar-small"}></span>
-      <span className="avatar-block__name">{props.userName}</span>
+      <span className={avatars[avatarID] + " avatar-small"}></span>
+      <span className="avatar-block__name">{username}</span>
     </span>
   );
 }

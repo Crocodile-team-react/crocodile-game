@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import Avatar from '../Avatar';
 
-function Player({ username, userID, onPlayerKick, avatar, pointCount }) {
+function Player({ username, userID, onPlayerKick, avatarID, pointCount }) {
   const hostID = useSelector(state => state.game.roomHostID);
   const curUserID = useSelector(state => state.user.userID);
   let removeButton = "";
@@ -10,9 +10,8 @@ function Player({ username, userID, onPlayerKick, avatar, pointCount }) {
     removeButton = <button onClick={() => onPlayerKick(userID)}>Kick</button>;
   }
   return (
-
     <li className="player-list__block__item">
-      <Avatar avatar={avatar} userName={username}/>
+      <Avatar avatarID={avatarID} username={username}/>
       <span className="score">
         <span className="point-count">{pointCount}</span>
         <span className="coin"></span>

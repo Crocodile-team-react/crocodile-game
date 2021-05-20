@@ -9,3 +9,6 @@ export { default as DrawingArea } from "./canvas/DrawingArea";
 export { default as GameChat } from "./game/GameChat";
 export { default as PlayerArea } from "./game/PlayerArea";
 export { default as PlayerList } from "./game/PlayerList";
+
+export { default as WarningModal } from "./modal/WarningModal";
+export { default as ChooseModal } from "./modal/ChooseModal";
