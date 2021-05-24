@@ -1,17 +1,25 @@
 import React from 'react';
 import Modal from './Modal';
+import {difficultWords, averageWords, simpleWords} from '../vocabulary/vocabulary.js'
 
-const words = ["ручка", "Прокрастинация", "Крокодил"];
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+};
+
+const arrWords = [];
+arrWords.push(simpleWords[getRandomInt(simpleWords.length)]);
+arrWords.push(averageWords[getRandomInt(averageWords.length)]);
+arrWords.push(difficultWords[getRandomInt(difficultWords.length)]);
 
 function ChooseModal({onWordChoose}) {
   return (
     <Modal w="446" h="390" className="choose-modal-block dark">
       <h3 className="title text-medium">Жребий великого рандома пал на тебя!</h3>
       <p className="text-small">Выбери слово, которое будешь изображать</p>
-      <button className="button-long-filled" onClick={() => onWordChoose(words[0])}>{words[0]}</button>
-      <button className="button-long-filled" onClick={() => onWordChoose(words[1])}>{words[1]}</button>
-      <button className="button-long-filled" onClick={() => onWordChoose(words[2])}>{words[2]}</button>
+      <button className="button-long-filled" onClick={() => onWordChoose(arrWords[0])}>{arrWords[0]}</button>
+      <button className="button-long-filled" onClick={() => onWordChoose(arrWords[1])}>{arrWords[1]}</button>
+      <button className="button-long-filled" onClick={() => onWordChoose(arrWords[2])}>{arrWords[2]}</button>
     </Modal>
   );
 }
