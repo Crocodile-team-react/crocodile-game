@@ -1,4 +1,6 @@
 import randomId from "./random.js";
+import { game } from './game.js';
+
 const maxRoomUsers = 2;
 
 class RoomStore {
@@ -8,7 +10,9 @@ class RoomStore {
   leaveRoom(roomID, userID) {}
   findOpenRoom() {}
   isRoomAvailable(roomID, userID) {}
-  kickUser(roomID, hostID, userID) {}
+  kickUser(roomID, hostID, userID) { }
+  gameStart(roomID) { }
+  setRoomWord(roomID, word) { }
 }
 
 export class InMemoryRoomStore extends RoomStore {
@@ -22,6 +26,24 @@ export class InMemoryRoomStore extends RoomStore {
     this.isRoomAvailable = this.roomDecorator(this.isRoomAvailable);
     this.leaveRoom = this.roomDecorator(this.leaveRoom);
     this.getRoomUsers = this.roomDecorator(this.getRoomUsers);
+    this.gameStart = this.roomDecorator(this.gameStart);
+    this.setRoomWord = this.roomDecorator(this.setRoomWord);
+    this.getRoom = this.roomDecorator(this.getRoom);
+  }
+  setRoomWord(roomID, word) {
+    let room = this.rooms.allRooms[roomID];
+    room.roomWord = word;
+    return room.users;
+  }
+  getRoom(roomID) {
+    return this.rooms.allRooms[roomID];
+  }
+  gameStart(roomID) {
+    let room = this.rooms.allRooms[roomID];
+    room.isGameStarted = true;
+    room.users[0].leader = true;
+    room.gameCounter = 190;
+    return room.users;
   }
   kickUser(roomID, hostID, userID) {
     let room = this.rooms.allRooms[roomID];
@@ -48,14 +70,20 @@ export class InMemoryRoomStore extends RoomStore {
     if (this.rooms.allRooms[roomID].users.length >= maxRoomUsers) {
       let response = {
         status: "error",
-        message: "Room is full",
+        message: {
+          title: "Комната полная",
+          body: "Попросите вашего друга кого нибудь кикнуть",
+        },
       };
       return response;
     }
     if (this.rooms.allRooms[roomID].blockedUsersID.indexOf(userID) !== -1) {
       let response = {
         status: "error",
-        message: "You was kicked from this lobby",
+        message: {
+          title: "Вас кикнули из игры",
+          body: "Вы больше не сможете сюда зайти :(",
+        },
       };
       return response;
     }
@@ -85,6 +113,9 @@ export class InMemoryRoomStore extends RoomStore {
         username: user.username,
         userID: user.userID,
         socketID: user.socketID,
+        avatarID: user.avatarID,
+        pointCount: 10,
+        leader: false,
       });
       response.hostID = this.rooms.allRooms[roomID].roomHostID;
       return response;
@@ -100,8 +131,11 @@ export class InMemoryRoomStore extends RoomStore {
       roomHostID: host.userID,
       roomHostSocketID: host.socketID,
       users: [],
+      roomWord: "",
+      gameCounter: 0,
       blockedUsersID: [],
       isRoomOpen: isRoomOpen,
+      isGameStarted: false,
     };
     this.rooms.allRooms[room.roomID] = room;
     if (isRoomOpen) {
@@ -118,7 +152,10 @@ export class InMemoryRoomStore extends RoomStore {
       } else {
         let response = {
           status: "error",
-          message: "Room is not exist",
+          message: {
+            title: "Комната не существует",
+            body: "Данной комнаты уже нет, а может и не было 0_0",
+          },
         };
         return response;
       }

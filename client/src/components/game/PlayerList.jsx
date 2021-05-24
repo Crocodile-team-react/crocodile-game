@@ -11,7 +11,6 @@ function PlayerList({onPlayerKick}) {
         {
         users &&
           users.map(user => {
-            console.log(user);
           return <Player
             onPlayerKick={onPlayerKick}
             key={user.userID}

@@ -35,6 +35,7 @@ io.use((socket, next) => {
       socket.sessionID = sessionID;
       socket.userID = session.userID;
       socket.username = session.username;
+      socket.avatarID = session.avatarID;
       return next();
     }
   }
@@ -45,6 +46,7 @@ io.use((socket, next) => {
   socket.sessionID = randomId();
   socket.userID = randomId();
   socket.username = username;
+  socket.avatarID = socket.handshake.auth.avatarID;
   next();
 });
 
@@ -53,16 +55,52 @@ io.on("connection", function (socket) {
   sessionStore.saveSession(socket.sessionID, {
     username: socket.username,
     userID: socket.userID,
+    avatarID: socket.avatarID,
     connected: true,
     socket: socket,
   })
   socket.emit("session", {
     sessionID: socket.sessionID,
     userID: socket.userID,
-    username: socket.username
+    username: socket.username,
+    avatarID: socket.avatarID,
   })
   socket.on("room:getInfo", callback => {
     callback(roomStore);
+  });
+  socket.on("game:start", () => {
+    let roomID = socket.roomID;
+    let users = roomStore.gameStart(roomID);
+    let room = roomStore.getRoom(roomID);
+    let roomWord = room.roomWord; // need make array from word
+    users.forEach((user) => {
+      io.to(user.socketID).emit("game:start", {users}); // need make function 
+    });
+    let timer = setInterval(() => {
+      room.gameCounter = room.gameCounter - 1;
+      if (room.gameCounter === 170) {
+        users.forEach((user) => {
+          let letter = roomWord[roomWord.length - 1];
+          io.to(user.socketID).emit("game:newLetter", letter); // send word array
+        });
+      }
+      if (room.gameCounter === 160) {
+        users.forEach((user) => {
+          let letter = roomWord[0];
+          io.to(user.socketID).emit("game:newLetter",);
+        });
+      }
+      if (room.gameCounter === 0) {
+        clearInterval(timer);
+        // users.forEach((user) => {
+        //   io.to(user.socketID).emit("game:start", users); -> timer end event
+        // });
+      }
+    }, 1000);
+  });
+  socket.on("game:wordChoose", (word) => {
+    let roomID = socket.roomID;
+    roomStore.setRoomWord
   });
   socket.on("room:kickPlayer", userID => {
     let roomID = socket.roomID;
@@ -93,6 +131,9 @@ io.on("connection", function (socket) {
       userID: socket.userID,
       username: socket.username,
       socketID: socket.id,
+      avatarID: socket.avatarID,
+      pointCount: 10,
+      leader: false,
     };
     let response = roomStore.joinRoom(room.roomID, newUser);
     let users = [];

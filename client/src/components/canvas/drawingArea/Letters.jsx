@@ -1,7 +1,7 @@
 import React from 'react';
 import Letter from './Letter';
 
-function Letters(props) {
+function Letters() {
   return (
     <span className="letters-block">
       <Letter></Letter>

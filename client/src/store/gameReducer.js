@@ -5,6 +5,7 @@ const initialState = {
   messages: [],
   roomID: "",
   roomHostID: "",
+  isGameStarted: false,
 };
 
 export const gameReducer = (state = initialState, action) => {
@@ -12,14 +13,20 @@ export const gameReducer = (state = initialState, action) => {
     case gmC.SET_ROOMID: {
       return {
         ...state,
-        roomID: action.payload.roomID
-      }
+        roomID: action.payload.roomID,
+      };
+    }
+    case gmC.SET_GAME_STARTED: {
+      return {
+        ...state,
+        isGameStarted: action.payload.isGameStarted,
+      };
     }
     case gmC.SET_USERS: {
       return {
         ...state,
         users: action.payload.users,
-      }
+      };
     }
     case gmC.ADD_USER: {
       const newUsers = [...state.users];
@@ -30,18 +37,19 @@ export const gameReducer = (state = initialState, action) => {
       };
     }
     case gmC.REMOVE_USER: {
-      const newUsers = state.users.filter(user => user.userID
-        !== action.payload.userID);
+      const newUsers = state.users.filter(
+        (user) => user.userID !== action.payload.userID
+      );
       return {
         ...state,
-        users: newUsers
-      }
+        users: newUsers,
+      };
     }
     case gmC.SET_ROOM_HOSTID: {
       return {
         ...state,
-        roomHostID: action.payload.roomHostID
-      }
+        roomHostID: action.payload.roomHostID,
+      };
     }
     default: {
       return state;

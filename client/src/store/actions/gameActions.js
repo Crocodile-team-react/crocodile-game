@@ -41,3 +41,11 @@ export const setRoomHostID = (roomHostID) => {
     }
   }
 }
+export const setGameStarted = (isGameStarted) => {
+  return {
+    type: gmC.SET_GAME_STARTED,
+    payload: {
+      isGameStarted,
+    },
+  };
+};

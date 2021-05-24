@@ -3,7 +3,11 @@ import React from 'react';
 import { StartPage, GamePage, NotFoundPage } from './pages';
 import { useHistory, Switch, Route, Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setUsers, setRoomID, addUser, removeUser, setRoomHostID } from "./store/actions/gameActions";
+import {
+  setUsers, setRoomID,
+  addUser, removeUser,
+  setRoomHostID, setGameStarted,
+} from "./store/actions/gameActions";
 import { setUsername, setUserID, setConnection, setAvatar } from "./store/actions/userActions";
 import { io } from 'socket.io-client';
 import { useLocalStorage, c, errMsg } from './helpers';
@@ -13,12 +17,12 @@ function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const roomID = useSelector((state) => state.game.roomID);
+  const timer = useSelector(state => ({ timer: state.game.gameTimer, counter: state.game.counter}))
   const [sessionID, setSessionID] = useLocalStorage("sessionID");
   const history = useHistory();
   const location = useLocation();
   const socket = React.useRef(io(c.SERVER_URL, { autoConnect: false }));
-  const [modalData, setModalData] = React.useState({isSeen: false, title: "", body: ""});
-
+  const [modalData, setModalData] = React.useState({ isSeen: false, title: "", body: "" });
   React.useEffect(() => {
     socket.current.onAny((msg, body) => {
       console.log(msg, body);
@@ -34,6 +38,10 @@ function App() {
       console.log("user was kicked " + userID); // additional opportunity to handle
       dispatch(removeUser(userID));
     })
+    socket.current.on("game:start", (users) => {
+      dispatch(setUsers(users));
+      dispatch(setGameStarted(true));
+    });
     socket.current.on("room:kicked", () => { // you was kicked
       console.log("you was kicked from lobby");
       dispatch(setRoomID(""));
@@ -57,6 +65,9 @@ function App() {
   const handlePlayerKick = (userID) => {
     socket.current.emit("room:kickPlayer", userID);
   };
+  const handleWordChoose = (word) => {
+    spcket.current.emit("game:wordChoose", word);
+  }
   const socketGetConnection = (initialConnection = false, timeout = 10000) => {
     return new Promise((resolve, reject) => {
       if ((initialConnection && sessionID) || user.username) {
@@ -112,6 +123,9 @@ function App() {
       
     }
   };
+  const handleStartGameClick = () => {
+    socket.current.emit("game:start");
+  }
   const handleJoinByCode = (code) => {
     history.push("/game/" + code);
   }
@@ -148,7 +162,7 @@ function App() {
               dispatch(setRoomID(roomID));
               dispatch(setUsers(users));
             }
-          }, 1500);
+          }, 200);
         });
       })
       .catch((msg) => {
@@ -159,6 +173,12 @@ function App() {
             title: "Ошибка",
             body: msg.message,
           }); // here we can show modal
+        } else {
+          setRoomFound(false);
+          setErrorMessage({
+            title: "Ошибка",
+            body: "Сессия не найдена или имя пользователя не указано",
+          }); 
         }
       });
   };
@@ -170,14 +190,15 @@ function App() {
   }
   return (
     <div className="app">
-      {
-        modalData.isSeen ?
-          <WarningModal title={modalData.title} body={ modalData.body} >
-            <button onClick={closeModal} className="button-medium-filled">
-              Ладно
-            </button>
-          </WarningModal> : ""
-      }
+      {modalData.isSeen ? (
+        <WarningModal title={modalData.title} body={modalData.body}>
+          <button onClick={closeModal} className="button-medium-filled">
+            Ладно
+          </button>
+        </WarningModal>
+      ) : (
+        ""
+      )}
       <Switch>
         <Route path="/" exact>
           <StartPage
@@ -189,6 +210,8 @@ function App() {
         </Route>
         <Route path="/game/:roomID" exact>
           <GamePage
+            onWordChoose={handleWordChoose}
+            onStartGameClick={handleStartGameClick}
             onPlayerKick={handlePlayerKick}
             onLobbyLoading={handleLobbyLoading}
           />

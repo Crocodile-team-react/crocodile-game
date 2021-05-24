@@ -1,22 +1,28 @@
 import React from 'react';
-import Canvas from './Canvas';
-import ToolBar from './drawingArea/ToolBar';
-import Avatar from '../Avatar';
-import Letters from './drawingArea/Letters';
-import Timer from './drawingArea/Timer';
-import ColorsBar from './drawingArea/ColorsBar';
-import WinnerModal from '../modal/WinnerModal';
-
-function DrawingArea() {
+import { Canvas, ToolBar, Avatar, Letters, Timer, ColorsBar, ChooseModal } from '../index.js';
+import { useSelector } from 'react-redux';
+function DrawingArea({onWordChoose}) {
+  const id = useSelector(state => state.user.userID);
+  const user = useSelector(state => state.game.users.filter(user => {
+    return user.userID == id;
+  }));
+  const isGameStarted = useSelector(state => state.game.isGameStarted);
   return (
     <div className="drawing-area-block">
       <Canvas>
         <Avatar avatar="avatar-crocodile" userName="Player 1"/>
         <Letters/>
-        <Timer minutes="2" seconds="58"/>
-        <ColorsBar/>
+        <Timer />
+        {
+          user.length && user[0].leader && isGameStarted &&
+          <ColorsBar/>
+        }
       </Canvas>
-      <ToolBar/>
+      {
+        user.length && user[0].leader && isGameStarted &&
+        <ToolBar/>
+      }
+      <ChooseModal onWordChoose={onWordChoose}></ChooseModal>
       {/* <WinnerModal></WinnerModal> */}
     </div>
   )

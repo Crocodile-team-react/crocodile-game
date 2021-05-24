@@ -164,7 +164,8 @@ $background-player: #4FAA69;
   display: block;
   border-radius: 50%;
   border: 2px solid $main-color;
-  background-size: contain;
+  background-size: cover;
+  background-position: center;
 }
 
 .avatar-big {

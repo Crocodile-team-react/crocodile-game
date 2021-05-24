@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { PlayerArea, DrawingArea, Logo, WarningModal, ChooseModal } from '../components';
 import { Link } from 'react-router-dom';
 
-function GamePage({onLobbyLoading, onPlayerKick}) {
+function GamePage({onLobbyLoading, onPlayerKick, onStartGameClick, onWordChoose}) {
   let { roomID } = useParams();
   const [loading, setLoading] = React.useState(true);
   const [isRoomFound, setRoomFound] = React.useState(false);
@@ -34,8 +34,8 @@ function GamePage({onLobbyLoading, onPlayerKick}) {
                 </Link>
                 <span className="logo-small"></span>
               </Logo>
-              <DrawingArea/>
-              <PlayerArea onPlayerKick={onPlayerKick}/>
+              <DrawingArea onWordChoose={onWordChoose}/>
+              <PlayerArea onPlayerKick={onPlayerKick} onStartGameClick={onStartGameClick}/>
             </div>
       }
       {/* <ChooseModal></ChooseModal> */}
