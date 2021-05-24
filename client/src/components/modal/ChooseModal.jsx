@@ -8,9 +8,9 @@ function getRandomInt(max) {
 };
 
 const arrWords = [];
-arrWords.push(simpleWords[getRandomInt(simpleWords.length)]);
-arrWords.push(averageWords[getRandomInt(averageWords.length)]);
-arrWords.push(difficultWords[getRandomInt(difficultWords.length)]);
+arrWords.push(simpleWords[getRandomInt(simpleWords.length-1)]);
+arrWords.push(averageWords[getRandomInt(averageWords.length-1)]);
+arrWords.push(difficultWords[getRandomInt(difficultWords.length-1)]);
 
 function ChooseModal({onWordChoose}) {
   return (
