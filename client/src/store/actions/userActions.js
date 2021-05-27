@@ -35,5 +35,13 @@ export const setAvatar = (avatarID) => {
     }
   }
 }
+export const setWordHint = (word) => {
+  return {
+    type: gmC.SET_WORD_HINT,
+    payload: {
+      word,
+    },
+  };
+};
 
 

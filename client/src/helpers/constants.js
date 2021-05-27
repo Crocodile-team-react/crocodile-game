@@ -18,6 +18,7 @@ export const gmC = {
   SET_CANVAS: "SET_CANVAS",
   PUSH_TO_UNDO: "PUSH_TO_UNDO",
   PUSH_TO_REDO: "PUSH_TO_REDO",
+  SET_WORD_HINT: "SET_WORD_HINT",
 };
 
 

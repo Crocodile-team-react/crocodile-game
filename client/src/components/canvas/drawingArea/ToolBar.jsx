@@ -32,7 +32,7 @@ function ToolBar({socket}) {
             if (tool.active) {
               className += " active";
             }
-            return <Tool onToolClick={() => handleToolClick(tool)}
+            return <Tool key={tool.name} onToolClick={() => handleToolClick(tool)}
               className={className} />
           })
         }

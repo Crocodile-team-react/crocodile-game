@@ -8,9 +8,15 @@ import {
   setRoomHostID, setGameStarted,
   setLetters, setRoundStarted,
   setGameModalData, discardGameData,
-  setGameCounter,
+  setGameCounter
 } from "./store/actions/gameActions";
-import { setUsername, setUserID, setConnection, setAvatar } from "./store/actions/userActions";
+import {
+  setUsername,
+  setUserID,
+  setConnection,
+  setAvatar,
+  setWordHint,
+} from "./store/actions/userActions";
 import { io } from 'socket.io-client';
 import { useLocalStorage, c, errMsg } from './helpers';
 import { WarningModal } from './components';
@@ -39,6 +45,7 @@ function App() {
       dispatch(setUsers(users));
     });
     socket.current.on("room:userLeave", (users) => {
+      console.log(users);
       dispatch(setUsers(users));
     });
     
@@ -48,8 +55,15 @@ function App() {
     });
     socket.current.on("game:startNewRound", () => {
       dispatch(discardGameData());
-      dispatch(setGameCounter(500));
+      dispatch(setGameCounter(60));
       dispatch(setRoundStarted(true));
+      dispatch({
+        type: "SET_TOOL",
+        payload: {
+          tool: null,
+        },
+      });
+      console.log("Чищу ложкой");
     });
     socket.current.on("game:newLetter", (letters) => {
       dispatch(setLetters(letters));
@@ -73,11 +87,15 @@ function App() {
 
   const handleRoomLeave = () => {
     socket.current.emit("room:leave");
+    dispatch(discardGameData());
+    dispatch(setRoundStarted(false));
+    dispatch(setGameStarted(false));
    };
   const handlePlayerKick = (userID) => {
     socket.current.emit("room:kickPlayer", userID);
   };
   const handleWordChoose = (word) => {
+    dispatch(setWordHint(word));
     socket.current.emit("game:wordChoose", word);
   }
   const socketGetConnection = (initialConnection = false, timeout = 10000) => {
@@ -136,7 +154,6 @@ function App() {
     }
   };
   const handleSendMessage = (msg) => {
-    console.log(msg);
     socket.current.emit("game:checkWord", msg);
   };
   const handleStartGameClick = () => {
@@ -180,7 +197,7 @@ function App() {
               dispatch(setUsers(users));
               dispatch(setGameStarted(isGameStarted));
               dispatch(setGameCounter(gameCounter));
-              if (gameCounter < 500) {
+              if (gameCounter < 60) {
                 dispatch(setRoundStarted(true));
               }
             }

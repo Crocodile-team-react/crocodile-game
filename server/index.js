@@ -5,6 +5,10 @@ import { Server } from "socket.io";
 import { InMemorySessionStore } from './helpers/sessionStore.js';
 import { InMemoryRoomStore } from "./helpers/roomStore.js";
 import randomId from './helpers/random.js';
+import fs from "fs";
+import path from "path";
+
+const __dirname = path.resolve();
 
 const app = express();
 const http = createServer(app);
@@ -65,13 +69,16 @@ io.on("connection", function (socket) {
     username: socket.username,
     avatarID: socket.avatarID,
   })
+
   socket.on("draw", (figure) => {
     let room = roomStore.getRoom(socket.roomID);
     broadcastToUsers(room.users, "draw", figure);
   })
+
   socket.on("room:getInfo", callback => {
     callback(roomStore);
   });
+
   socket.on("game:start", () => {
     let room = roomStore.getRoom(socket.roomID);
     let users = room.users;
@@ -80,27 +87,58 @@ io.on("connection", function (socket) {
     broadcastToUsers(users, "game:start", {users});
   });
 
+  socket.on("image:save", (img) => {
+    try {
+      const data = img.img.replace("data:image/png;base64,", "");
+      fs.writeFileSync(
+        path.resolve(__dirname, "files", `${socket.roomID}.jpg`),
+        data,
+        "base64"
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  });
+  socket.on("image:get", (callback) => {
+    try {
+      const file = fs.readFileSync(
+        path.resolve(__dirname, "files", `${socket.roomID}.jpg`)
+      );
+      const data = "data:image/png;base64," + file.toString("base64");
+      callback({data});
+    } catch (e) {
+      console.log(e);
+    }
+  })
+
   socket.on("game:wordChoose", (word) => {
     let roomID = socket.roomID;
     let room = roomStore.getRoom(roomID);
     let users = roomStore.getRoomUsers(roomID);
     room.roomWord = word;
-    room.gameCounter = 500; // round counter
+    room.gameCounter = 60; // round counter
 
     let letters = new Array(room.roomWord.length).fill("");
 
     broadcastToUsers(users, "game:startNewRound");
 
+    try {
+      fs.unlinkSync(path.resolve(__dirname, "files", `${socket.roomID}.jpg`));
+      //file removed
+    } catch (err) {
+      console.error(err);
+    }
+
     room.timer = setInterval(() => {
       room.gameCounter = room.gameCounter - 1;
-      if (room.gameCounter === 25) {
+      if (room.gameCounter === 40) {
         broadcastToUsers(users, "game:newLetter", letters);
       }
-      if (room.gameCounter === 20) {
+      if (room.gameCounter === 35) {
         letters[0] = room.roomWord[0];
         broadcastToUsers(users, "game:newLetter", letters);
       }
-      if (room.gameCounter === 15) {
+      if (room.gameCounter === 30) {
         letters[letters.length - 1] = room.roomWord[room.roomWord.length - 1];
         broadcastToUsers(users, "game:newLetter", letters);
       }
@@ -127,7 +165,7 @@ io.on("connection", function (socket) {
       broadcastToUsers(users, "game:endRound", {
         users: room.users,
         word: room.roomWord,
-        winner: socket.userID,
+        winner: socket.username,
       });
     }
   });
@@ -139,7 +177,7 @@ io.on("connection", function (socket) {
     if (response.status === "success") {
       io.to(response.removedUser.socketID).emit("room:kicked");
       let users = roomStore.getRoomUsers(socket.roomID);
-      broadcastToUsers(users, "room:userLeave", userID);
+      broadcastToUsers(users, "room:userLeave", users);
     }
   });
   socket.on("room:host", (callback) => {

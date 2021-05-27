@@ -55,5 +55,6 @@ export default class Rect extends Tool {
     ctx.rect(x, y, w, h);
     ctx.fill();
     ctx.stroke();
+    ctx.beginPath();
   }
 }

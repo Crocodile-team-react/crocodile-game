@@ -5,11 +5,18 @@ const initialState = {
   username: '',
   avatarID: 0,
   isConnected: false,
+  wordHint: "",
 };
 
 
 export const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case gmC.SET_WORD_HINT: {
+      return {
+        ...state,
+        wordHint: action.payload.word
+      }
+    }
     case gmC.SET_USERNAME: {
       return {
         ...state,

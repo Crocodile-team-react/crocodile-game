@@ -12,6 +12,7 @@ function DrawingArea({ onWordChoose, socket}) {
   const isGameStarted = useSelector(state => state.game.isGameStarted);
   const isRoundStarted = useSelector(state => state.game.isRoundStarted);
   const modalData = useSelector(state => state.game.gameModal);
+  const wordHint = useSelector(state => state.user.wordHint);
   React.useEffect(() => {
     if (modalData.isSeen) {
       setTimeout(() => {
@@ -19,6 +20,7 @@ function DrawingArea({ onWordChoose, socket}) {
       }, 5000)
     }
   }, [modalData.isSeen])
+  
   return (
     <div className="drawing-area-block">
       <Canvas socket={socket}>
@@ -29,18 +31,22 @@ function DrawingArea({ onWordChoose, socket}) {
         <Letters/>
         <Timer />
         {
-          isGameStarted &&
+          !modalData.isSeen && leader && leader.userID === userID && isGameStarted &&
           <ColorsBar/>
         }
+        {
+          !modalData.isSeen && leader && leader.userID === userID && isGameStarted &&
+          <p className="word-hint">{wordHint}</p>
+        }
+        {
+          modalData.isSeen &&
+          <WinnerModal word={modalData.word}>
+            <p className="win-text">{modalData.winner ? "Победил игрок " + modalData.winner : "Никто не угадал слово"}</p>
+            <p className="win-text">Новая игра начнется через 5 секунд.</p>
+          </WinnerModal>
+        }
+        
       </Canvas>
-      {
-        modalData.isSeen &&
-        <div>
-          <p>{modalData.word}</p>
-          <p>{modalData.winner ? "Победил игрок " + modalData.winner : "Никто не угадал слово"}</p>
-          <p>Новая игра начнется через 5 секунд.</p>
-        </div>
-      }
       {
         !modalData.isSeen && leader && leader.userID === userID && isGameStarted &&
         <ToolBar socket={socket}/>

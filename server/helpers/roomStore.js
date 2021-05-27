@@ -1,5 +1,8 @@
 import randomId from "./random.js";
+import fs from "fs";
+import path from "path";
 
+const __dirname = path.resolve();
 const maxRoomUsers = 3;
 
 class RoomStore {
@@ -34,6 +37,12 @@ export class InMemoryRoomStore extends RoomStore {
   removeRoom(roomID) {
     this.rooms.openedRoomsID = this.rooms.openedRoomsID.filter(id => id !== roomID);
     delete this.rooms.allRooms[roomID];
+    try {
+      fs.unlinkSync(path.resolve(__dirname, "files", `${roomID}.jpg`));
+      //file removed
+    } catch (err) {
+      console.error(err);
+    }
   }
   changeLeader(roomID) { 
     let room = this.rooms.allRooms[roomID];
@@ -151,7 +160,7 @@ export class InMemoryRoomStore extends RoomStore {
       users: [],
       roomWord: "",
       timer: null,
-      gameCounter: 500,
+      gameCounter: 60,
       blockedUsersID: [],
       isRoomOpen: isRoomOpen,
       isGameStarted: false,
