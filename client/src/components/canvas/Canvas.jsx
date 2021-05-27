@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux';
-import { Brush } from "./tools";
+import { Brush, Rect } from "./tools";
+
 function Canvas({socket, children}) {
   const dispatch = useDispatch();
   const canvasRef = React.useRef();
@@ -27,6 +28,9 @@ function Canvas({socket, children}) {
     switch (figure.type) {
       case 'brush':
         Brush.draw(ctx, figure.x, figure.y);
+        break;
+      case 'rect':
+        Rect.draw(ctx, figure.x, figure.y, figure.width, figure.height);
         break;
       case 'finish':
         ctx.beginPath();

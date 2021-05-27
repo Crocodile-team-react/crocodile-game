@@ -8,19 +8,40 @@ function ToolBar({socket}) {
   const dispatch = useDispatch();
   const canvas = useSelector(state => state.canvas.canvas);
   const tool = useSelector(state => state.tool.tool);
+  const handleToolClick = (curTool) => {
+    tools.forEach(tool => {
+      tool.active = false;
+      if (tool.name === curTool.name) {
+        tool.active = true;
+      }
+      return tool;
+    })
+    dispatch({
+      type: "SET_TOOL",
+      payload: {
+        tool: new curTool.Component(canvas, socket)
+      }
+    });
+  }
   return (
     <div className="tool-bar-block">
       <div className="tool-bar-block__tools">
-        <Tool onToolClick={() => {
-          dispatch({ type: "SET_TOOL", payload: {tool: new tools[0].Component(canvas, socket)}});
-        }} className={tools[0].name +" "+ tools[0].active?"active": ""}/>
-        <Tool className="rubber"/>
-        <Tool className="square"/>
-        <Tool className="circle"/>
+        {
+          tools.map(tool => {
+            let className = tool.name;
+            if (tool.active) {
+              className += " active";
+            }
+            return <Tool onToolClick={() => handleToolClick(tool)}
+              className={className} />
+          })
+        }
+        {/* <Tool className="rubber"/> */}
+        {/* <Tool className="circle"/>
         <Tool className="square-fill"/>
         <Tool className="circle-fill"/>
         <Tool className="line"/>
-        <Tool className="fill"/>
+        <Tool className="fill"/> */}
       </div>
       <div className="tool-bar-block__arrows">
         <button className="arrow-previous"></button>
@@ -45,6 +66,16 @@ const tools = [
     name: "pencil",
     Component: Brush,
     active: true,
+  },
+  {
+    name: "square",
+    Component: Rect,
+    active: false,
+  },
+  {
+    name: "circle",
+    Component: Circle,
+    active: false,
   }
 ]
 
