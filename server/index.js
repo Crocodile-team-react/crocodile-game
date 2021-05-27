@@ -65,43 +65,73 @@ io.on("connection", function (socket) {
     username: socket.username,
     avatarID: socket.avatarID,
   })
+  socket.on("draw", (figure) => {
+    let room = roomStore.getRoom(socket.roomID);
+    broadcastToUsers(room.users, "draw", figure);
+  })
   socket.on("room:getInfo", callback => {
     callback(roomStore);
   });
   socket.on("game:start", () => {
-    let roomID = socket.roomID;
-    let users = roomStore.gameStart(roomID);
-    let room = roomStore.getRoom(roomID);
-    let roomWord = room.roomWord; // need make array from word
-    users.forEach((user) => {
-      io.to(user.socketID).emit("game:start", {users}); // need make function 
-    });
-    let timer = setInterval(() => {
-      room.gameCounter = room.gameCounter - 1;
-      if (room.gameCounter === 170) {
-        users.forEach((user) => {
-          let letter = roomWord[roomWord.length - 1];
-          io.to(user.socketID).emit("game:newLetter", letter); // send word array
-        });
-      }
-      if (room.gameCounter === 160) {
-        users.forEach((user) => {
-          let letter = roomWord[0];
-          io.to(user.socketID).emit("game:newLetter",);
-        });
-      }
-      if (room.gameCounter === 0) {
-        clearInterval(timer);
-        // users.forEach((user) => {
-        //   io.to(user.socketID).emit("game:start", users); -> timer end event
-        // });
-      }
-    }, 1000);
+    let room = roomStore.getRoom(socket.roomID);
+    let users = room.users;
+    room.isGameStarted = true;
+    room.users[0].leader = true;
+    broadcastToUsers(users, "game:start", {users});
   });
+
   socket.on("game:wordChoose", (word) => {
     let roomID = socket.roomID;
-    roomStore.setRoomWord
+    let room = roomStore.getRoom(roomID);
+    let users = roomStore.getRoomUsers(roomID);
+    room.roomWord = word;
+    room.gameCounter = 500; // round counter
+
+    let letters = new Array(room.roomWord.length).fill("");
+
+    broadcastToUsers(users, "game:startNewRound");
+
+    room.timer = setInterval(() => {
+      room.gameCounter = room.gameCounter - 1;
+      if (room.gameCounter === 25) {
+        broadcastToUsers(users, "game:newLetter", letters);
+      }
+      if (room.gameCounter === 20) {
+        letters[0] = room.roomWord[0];
+        broadcastToUsers(users, "game:newLetter", letters);
+      }
+      if (room.gameCounter === 15) {
+        letters[letters.length - 1] = room.roomWord[room.roomWord.length - 1];
+        broadcastToUsers(users, "game:newLetter", letters);
+      }
+      if (room.gameCounter === 0) {
+        clearInterval(room.timer);
+        roomStore.changeLeader(room.roomID);
+        broadcastToUsers(users, "game:endRound", {
+          users: room.users,
+          word: room.roomWord,
+          winner: null,
+        });
+      }
+    }, 1000);
+
   });
+  socket.on("game:checkWord", (msg) => {
+    let roomID = socket.roomID;
+    let room = roomStore.getRoom(roomID);
+
+    if (room.roomWord === msg) {
+      let users = roomStore.getRoomUsers(roomID);
+      clearInterval(room.timer);
+      roomStore.changeLeader(room.roomID);
+      broadcastToUsers(users, "game:endRound", {
+        users: room.users,
+        word: room.roomWord,
+        winner: socket.userID,
+      });
+    }
+  });
+
   socket.on("room:kickPlayer", userID => {
     let roomID = socket.roomID;
     let hostID = socket.userID;
@@ -109,9 +139,7 @@ io.on("connection", function (socket) {
     if (response.status === "success") {
       io.to(response.removedUser.socketID).emit("room:kicked");
       let users = roomStore.getRoomUsers(socket.roomID);
-      users.forEach((user) => {
-        io.to(user.socketID).emit("room:userKicked", userID);
-      });
+      broadcastToUsers(users, "room:userLeave", userID);
     }
   });
   socket.on("room:host", (callback) => {
@@ -126,7 +154,7 @@ io.on("connection", function (socket) {
     let response = roomStore.isRoomAvailable(room.roomID);
     callback(response);
   });
-  socket.on("room:join", (room, callback) => {
+  socket.on("room:join", ({roomID}, callback) => {
     let newUser = {
       userID: socket.userID,
       username: socket.username,
@@ -135,17 +163,17 @@ io.on("connection", function (socket) {
       pointCount: 10,
       leader: false,
     };
-    let response = roomStore.joinRoom(room.roomID, newUser);
-    let users = [];
-    if (response.status === "success") {  
+    let response = roomStore.joinRoom(roomID, newUser);
+    if (response.status === "success") {
+      let room = roomStore.getRoom(roomID);
+      let users = room.users;
       socket.roomID = room.roomID;
-      users = roomStore.getRoomUsers(room.roomID);
-      users.forEach((user) => {
-        socket.to(user.socketID).emit("room:userJoin", newUser);
-      });
+      broadcastToUsers(users, "room:userJoin", users);
       callback({
         response,
-        users,
+        users: room.users,
+        isGameStarted: room.isGameStarted,
+        gameCounter: room.gameCounter,
       });
     } else {
       callback({response});
@@ -165,12 +193,31 @@ http.listen(PORT, () => {
 
 const socketLeaveRoom = (socket) => {
   if (socket.roomID) {
-    let removedUser = roomStore.leaveRoom(socket.roomID, socket.userID);
+    let roomID = socket.roomID;
+    let room = roomStore.getRoom(roomID);
+    let removedUser = roomStore.leaveRoom(roomID, socket.userID);
     if (removedUser) {
-      let users = roomStore.getRoomUsers(socket.roomID);
-      users.forEach((user) => {
-        socket.to(user.socketID).emit("room:userLeave", socket.userID);
-      });
+      let timer = setTimeout(() => {
+        if (room.users) {
+          if (!room.users.find((user) => user.userID === socket.userID)) {
+            let users = room.users;
+            if (users.length) {
+              broadcastToUsers(users, "room:userLeave", users);
+            } else {
+              roomStore.removeRoom(roomID);
+            }
+          }
+        } else {
+          roomStore.removeRoom(roomID);
+        }
+      }, 1500)
+      
     }
   }
 }
+
+const broadcastToUsers = (users, event, data = null) => {
+  users.forEach((user) => {
+    io.to(user.socketID).emit(event, data);
+  });
+};

@@ -1,9 +1,9 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'  
-import { PlayerArea, DrawingArea, Logo, WarningModal, ChooseModal } from '../components';
+import { PlayerArea, DrawingArea, Logo, WarningModal } from '../components';
 import { Link } from 'react-router-dom';
 
-function GamePage({onLobbyLoading, onPlayerKick, onStartGameClick, onWordChoose}) {
+function GamePage({onLobbyLoading, onPlayerKick, onStartGameClick, onWordChoose, onMessageSend, socket}) {
   let { roomID } = useParams();
   const [loading, setLoading] = React.useState(true);
   const [isRoomFound, setRoomFound] = React.useState(false);
@@ -34,11 +34,16 @@ function GamePage({onLobbyLoading, onPlayerKick, onStartGameClick, onWordChoose}
                 </Link>
                 <span className="logo-small"></span>
               </Logo>
-              <DrawingArea onWordChoose={onWordChoose}/>
-              <PlayerArea onPlayerKick={onPlayerKick} onStartGameClick={onStartGameClick}/>
+              <DrawingArea
+                socket={socket}
+                onWordChoose={onWordChoose} />
+              <PlayerArea
+                onPlayerKick={onPlayerKick}
+                onStartGameClick={onStartGameClick}
+                onMessageSend={onMessageSend}
+              />
             </div>
       }
-      {/* <ChooseModal></ChooseModal> */}
     </div>
   )
 }

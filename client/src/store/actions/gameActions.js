@@ -49,3 +49,44 @@ export const setGameStarted = (isGameStarted) => {
     },
   };
 };
+
+export const setRoundStarted = (isRoundStarted) => {
+  return {
+    type: gmC.SET_ROUND_STARTED,
+    payload: {
+      isRoundStarted
+    }
+  }
+}
+export const setLetters = (letters) => {
+  return {
+    type: gmC.SET_LETTERS,
+    payload: {
+      letters
+    }
+  }
+}
+export const setGameModalData = (data, isSeen) => {
+  return {
+    type: gmC.SET_GAME_MODAL,
+    payload: {
+      winner: data.winner,
+      word: data.word,
+      isSeen: isSeen,
+    },
+  };
+};
+
+export const discardGameData = () => {
+  return {
+    type: gmC.DISCARD_GAME_DATA
+  };
+}
+export const setGameCounter = (time) => {
+  return {
+    type: gmC.SET_GAME_COUNTER,
+    payload: {
+      counter: time
+    }
+  };
+};

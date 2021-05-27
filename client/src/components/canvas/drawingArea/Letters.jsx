@@ -1,17 +1,19 @@
 import React from 'react';
 import Letter from './Letter';
+import { useSelector } from 'react-redux';
 
 function Letters() {
+  let letters = useSelector(state => state.game.letters);
   return (
     <span className="letters-block">
-      <Letter></Letter>
-      <Letter></Letter>
-      <Letter>о</Letter>
-      <Letter></Letter>
-      <Letter></Letter>
-      <Letter></Letter>
-      <Letter>и</Letter>
-      <Letter></Letter>
+      {
+        letters.length ?
+        letters.map((letter, i) => {
+          return <Letter key={i}>{letter}</Letter>
+        })
+          :
+        ""
+      }
     </span>
   );
 }

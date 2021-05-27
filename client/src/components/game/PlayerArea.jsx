@@ -3,10 +3,12 @@ import PlayerList from './PlayerList';
 import GameChat from './GameChat';
 import { useSelector } from 'react-redux';
 
-function PlayerArea({ onPlayerKick, onStartGameClick }) {
+function PlayerArea({ onPlayerKick, onStartGameClick, onMessageSend }) {
   const hostID = useSelector(state => state.game.roomHostID);
   const userID = useSelector(state => state.user.userID);
   const isGameStarted = useSelector(state => state.game.isGameStarted);
+  const isRoundStarted = useSelector(state => state.game.isRoundStarted);
+
   let startGameBlock = "";
   if (hostID === userID) {
     startGameBlock = <div className="start-game-block">
@@ -31,7 +33,11 @@ function PlayerArea({ onPlayerKick, onStartGameClick }) {
       <PlayerList onPlayerKick={onPlayerKick} />
       {
         isGameStarted ?
-          <GameChat /> :
+          (isRoundStarted ?
+            <GameChat onMessageSend={onMessageSend} /> :
+            <p>Ждем пока игрок выберет слово</p>
+          )
+          :
           startGameBlock
       }
     </div>

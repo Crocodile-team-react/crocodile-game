@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from './Modal';
 
-const words = ["ручка", "Прокрастинация", "Крокодил"];
+const words = ["ручка", "прокрастинация", "крокодил"];
 
 
 function ChooseModal({onWordChoose}) {

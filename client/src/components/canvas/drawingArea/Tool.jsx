@@ -1,8 +1,8 @@
 import React from 'react';
 
-function Tool(props) {
+function Tool({className, onToolClick}) {
   return (
-    <button className={props.className} onClick={f=>f}></button>
+    <button className={className} onClick={onToolClick}></button>
   );
 }
 

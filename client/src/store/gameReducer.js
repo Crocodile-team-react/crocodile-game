@@ -6,10 +6,54 @@ const initialState = {
   roomID: "",
   roomHostID: "",
   isGameStarted: false,
+  isRoundStarted: false,
+  gameModal: { isSeen: false, winner: null, word: "" },
+  counter: 500,
+  letters: [],
 };
 
 export const gameReducer = (state = initialState, action) => {
   switch (action.type) {
+    case gmC.COUNTER_TICK: {
+      let counter = state.counter - 1;
+      return {
+        ...state,
+        counter: counter,
+      };
+    }
+    case gmC.SET_GAME_COUNTER: {
+      return {
+        ...state,
+        counter: action.payload.counter,
+      };
+    }
+    case gmC.DISCARD_GAME_DATA: {
+      return {
+        ...state,
+        gameModal: { isSeen: false, winner: null, word: "" },
+        letters: [],
+      };
+    }
+    case gmC.SET_GAME_MODAL: {
+      return {
+        ...state,
+        gameModal: {
+          ...action.payload,
+        },
+      };
+    }
+    case gmC.SET_LETTERS: {
+      return {
+        ...state,
+        letters: action.payload.letters,
+      };
+    }
+    case gmC.SET_ROUND_STARTED: {
+      return {
+        ...state,
+        isRoundStarted: action.payload.isRoundStarted,
+      };
+    }
     case gmC.SET_ROOMID: {
       return {
         ...state,

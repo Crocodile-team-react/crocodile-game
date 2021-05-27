@@ -1,19 +1,26 @@
 import React from 'react';
 import Tool from './Tool';
 import Range from './Range';
+import { Brush, Circle, Rect, Eraser, Line } from '../tools';
+import { useDispatch, useSelector } from 'react-redux';
 
-function ToolBar() {
+function ToolBar({socket}) {
+  const dispatch = useDispatch();
+  const canvas = useSelector(state => state.canvas.canvas);
+  const tool = useSelector(state => state.tool.tool);
   return (
     <div className="tool-bar-block">
       <div className="tool-bar-block__tools">
-        <Tool className="pencil active"></Tool>
-        <Tool className="rubber"></Tool>
-        <Tool className="square"></Tool>
-        <Tool className="circle"></Tool>
-        <Tool className="square-fill"></Tool>
-        <Tool className="circle-fill"></Tool>
-        <Tool className="line"></Tool>
-        <Tool className="fill"></Tool>
+        <Tool onToolClick={() => {
+          dispatch({ type: "SET_TOOL", payload: {tool: new tools[0].Component(canvas, socket)}});
+        }} className={tools[0].name +" "+ tools[0].active?"active": ""}/>
+        <Tool className="rubber"/>
+        <Tool className="square"/>
+        <Tool className="circle"/>
+        <Tool className="square-fill"/>
+        <Tool className="circle-fill"/>
+        <Tool className="line"/>
+        <Tool className="fill"/>
       </div>
       <div className="tool-bar-block__arrows">
         <button className="arrow-previous"></button>
@@ -32,5 +39,13 @@ function ToolBar() {
     </div>
   );
 }
+
+const tools = [
+  {
+    name: "pencil",
+    Component: Brush,
+    active: true,
+  }
+]
 
 export default ToolBar;

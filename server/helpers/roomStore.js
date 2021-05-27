@@ -1,7 +1,6 @@
 import randomId from "./random.js";
-import { game } from './game.js';
 
-const maxRoomUsers = 2;
+const maxRoomUsers = 3;
 
 class RoomStore {
   createNewRoom(host, isRoomOpen) {}
@@ -10,9 +9,10 @@ class RoomStore {
   leaveRoom(roomID, userID) {}
   findOpenRoom() {}
   isRoomAvailable(roomID, userID) {}
-  kickUser(roomID, hostID, userID) { }
-  gameStart(roomID) { }
-  setRoomWord(roomID, word) { }
+  kickUser(roomID, hostID, userID) {}
+  setRoomWord(roomID, word) {}
+  changeLeader(roomID) { }
+  removeRoom(roomID) { }
 }
 
 export class InMemoryRoomStore extends RoomStore {
@@ -26,9 +26,34 @@ export class InMemoryRoomStore extends RoomStore {
     this.isRoomAvailable = this.roomDecorator(this.isRoomAvailable);
     this.leaveRoom = this.roomDecorator(this.leaveRoom);
     this.getRoomUsers = this.roomDecorator(this.getRoomUsers);
-    this.gameStart = this.roomDecorator(this.gameStart);
     this.setRoomWord = this.roomDecorator(this.setRoomWord);
     this.getRoom = this.roomDecorator(this.getRoom);
+    this.changeLeader = this.roomDecorator(this.changeLeader);
+    this.removeRoom = this.roomDecorator(this.removeRoom);
+  }
+  removeRoom(roomID) {
+    this.rooms.openedRoomsID = this.rooms.openedRoomsID.filter(id => id !== roomID);
+    delete this.rooms.allRooms[roomID];
+  }
+  changeLeader(roomID) { 
+    let room = this.rooms.allRooms[roomID];
+    if (room.users.length) {
+      let nextLeaderIndex;
+      let curLeaderIndex = room.users.findIndex((user) => user.leader);
+
+      if (curLeaderIndex === -1) {
+        nextLeaderIndex = 0;
+      } else {
+        nextLeaderIndex =
+          curLeaderIndex + 1 <= room.users.length - 1
+            ? curLeaderIndex + 1
+            : 0;
+        room.users[curLeaderIndex].leader = false;
+      }
+      room.users[nextLeaderIndex].leader = true;
+    } else { 
+      this.removeRoom(roomID);
+    }
   }
   setRoomWord(roomID, word) {
     let room = this.rooms.allRooms[roomID];
@@ -37,13 +62,6 @@ export class InMemoryRoomStore extends RoomStore {
   }
   getRoom(roomID) {
     return this.rooms.allRooms[roomID];
-  }
-  gameStart(roomID) {
-    let room = this.rooms.allRooms[roomID];
-    room.isGameStarted = true;
-    room.users[0].leader = true;
-    room.gameCounter = 190;
-    return room.users;
   }
   kickUser(roomID, hostID, userID) {
     let room = this.rooms.allRooms[roomID];
@@ -132,7 +150,8 @@ export class InMemoryRoomStore extends RoomStore {
       roomHostSocketID: host.socketID,
       users: [],
       roomWord: "",
-      gameCounter: 0,
+      timer: null,
+      gameCounter: 500,
       blockedUsersID: [],
       isRoomOpen: isRoomOpen,
       isGameStarted: false,

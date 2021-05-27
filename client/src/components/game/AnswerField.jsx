@@ -1,10 +1,16 @@
 import React from 'react';
 
-function AnswerField() {
+function AnswerField({ onMessageSend }) {
+  let inputRef = React.useRef(null);
   return (
     <form className="form-with-inp-but">
-      <input type="text" className="input" placeholder="Ваши догадки..."/>
-      <button className="button-short-filled" type="submit">Ок</button>
+      <input ref={inputRef} type="text" className="input" placeholder="Ваши догадки..."/>
+      <button
+        onClick={(e) => {
+          e.preventDefault();
+          onMessageSend(inputRef.current.value.trim())
+        }}
+        className="button-short-filled" type="submit">Ок</button>
     </form>
   );
 }
