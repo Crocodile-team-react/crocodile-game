@@ -8,9 +8,8 @@ function WinnerModal(props) {
   return (
     <Modal w="280" className="winner-modal-block">
       <h3 className="title">{word}</h3>
-      true?
-      <p className="win-text">угадал(а): {player}</p>:
-      <p className="win-text">никто не угадал</p>
+      {true ? <p className="win-text">угадал(а): {player}</p> :
+      <p className="win-text">никто не угадал</p>}
       {/*Game results*/}
       <div className="game-results-block">
         <h3 className="title">Конец игры</h3>
