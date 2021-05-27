@@ -66,7 +66,7 @@ function App() {
     socket.current.emit("room:kickPlayer", userID);
   };
   const handleWordChoose = (word) => {
-    spcket.current.emit("game:wordChoose", word);
+    socket.current.emit("game:wordChoose", word);
   }
   const socketGetConnection = (initialConnection = false, timeout = 10000) => {
     return new Promise((resolve, reject) => {

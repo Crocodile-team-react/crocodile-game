@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from './Modal';
-import {difficultWords, averageWords, simpleWords} from '../vocabulary/vocabulary.js'
+import vocabulary from '../vocabulary/vocabulary.js'
 
 
 function getRandomInt(max) {
@@ -8,9 +8,9 @@ function getRandomInt(max) {
 };
 
 const arrWords = [];
-arrWords.push(simpleWords[getRandomInt(simpleWords.length-1)]);
-arrWords.push(averageWords[getRandomInt(averageWords.length-1)]);
-arrWords.push(difficultWords[getRandomInt(difficultWords.length-1)]);
+arrWords.push(vocabulary.simpleWords[getRandomInt(vocabulary.simpleWords.length-1)]);
+arrWords.push(vocabulary.averageWords[getRandomInt(vocabulary.averageWords.length-1)]);
+arrWords.push(vocabulary.difficultWords[getRandomInt(vocabulary.difficultWords.length-1)]);
 
 function ChooseModal({onWordChoose}) {
   return (

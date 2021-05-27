@@ -200,7 +200,7 @@ $background-player: #4FAA69;
   background-image: url("./images/coin.svg");
 }
 
-.button-short-filled.copy {
+.copy {
   position: relative;
 
   &::before {
@@ -208,7 +208,7 @@ $background-player: #4FAA69;
     width: 40px;
     height: 40px;
     position: absolute;
-    left: 0;
+    left: 180px;
     top: 0;
     background: no-repeat center/ 15px 18px url("./images/copy.svg");
   }

@@ -8,7 +8,9 @@ function WinnerModal(props) {
   return (
     <Modal w="280" className="winner-modal-block">
       <h3 className="title">{word}</h3>
-      <p className="win-text">угадал(а): {player}</p>
+      true?
+      <p className="win-text">угадал(а): {player}</p>:
+      <p className="win-text">никто не угадал</p>
       {/*Game results*/}
       <div className="game-results-block">
         <h3 className="title">Конец игры</h3>
@@ -27,10 +29,8 @@ function WinnerModal(props) {
             </li>
         </ol>
       </div>
-      <p className="text">Поделиться картинкой</p>
       <form className="form-with-inp-but">
-            <input type="text" className="input" placeholder="Ссылка на изображение"/>
-            <button className="button-short-filled copy" type="submit"></button>
+            <button className="button-long-filled copy" type="submit">скачать картинку</button>
         </form>
     </Modal>
   );
