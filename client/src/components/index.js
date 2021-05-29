@@ -1,7 +1,6 @@
 export { default as Logo} from "./Logo";
 export { default as UserControls} from "./UserControls";
 export { default as UserSettings } from "./UserSettings";
-export { default as Modal } from "./Modal";
 export { default as Avatar } from "./Avatar";
 
 export { default as Canvas } from "./canvas/Canvas";
