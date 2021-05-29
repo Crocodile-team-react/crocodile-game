@@ -10,7 +10,7 @@ export default class Brush extends Tool {
      this.canvas.onmouseup = this.mouseUpHandler.bind(this);
      this.canvas.onmousedown = this.mouseDownHandler.bind(this);
      this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
-     this.ctx.strokeStyle = '#000';
+
    }
    mouseUpHandler() {
      this.mouseDown = false;
@@ -19,6 +19,10 @@ export default class Brush extends Tool {
      });
    }
   mouseDownHandler(e) {
+
+    this.ctx.strokeStyle = this.strokeStyle;
+     // this.ctx.strokeWidth = this.strokeWidth;
+    
     this.mouseDown = true;
     this.ctx.beginPath();
     this.ctx.moveTo(
@@ -33,6 +37,7 @@ export default class Brush extends Tool {
         type: "brush",
         x: e.pageX - this.areaBlock.offsetLeft,
         y: e.pageY - this.areaBlock.offsetTop,
+        // stokeWidth: this.stokeWidth
       });
     }
   }

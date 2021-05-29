@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { PlayerArea, DrawingArea, Logo, WarningModal } from '../components';
 import { Link } from 'react-router-dom';
 
-function GamePage({onLobbyLoading, onPlayerKick, onStartGameClick, onWordChoose, onMessageSend, socket}) {
+function GamePage({onLobbyLoading, onPlayerKick, onStartGameClick, onWordChoose, socket}) {
   let { roomID } = useParams();
   const [loading, setLoading] = React.useState(true);
   const [isRoomFound, setRoomFound] = React.useState(false);
@@ -38,9 +38,9 @@ function GamePage({onLobbyLoading, onPlayerKick, onStartGameClick, onWordChoose,
                 socket={socket}
                 onWordChoose={onWordChoose} />
               <PlayerArea
+                socket={socket}
                 onPlayerKick={onPlayerKick}
                 onStartGameClick={onStartGameClick}
-                onMessageSend={onMessageSend}
               />
             </div>
       }

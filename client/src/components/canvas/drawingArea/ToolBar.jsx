@@ -8,6 +8,7 @@ function ToolBar({socket}) {
   const dispatch = useDispatch();
   const canvas = useSelector(state => state.canvas.canvas);
   const tool = useSelector(state => state.tool.tool);
+
   const handleToolClick = (curTool) => {
     tools.forEach(tool => {
       tool.active = false;
@@ -23,6 +24,7 @@ function ToolBar({socket}) {
       }
     });
   }
+  
   return (
     <div className="tool-bar-block">
       <div className="tool-bar-block__tools">

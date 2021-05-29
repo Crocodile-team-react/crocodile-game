@@ -2,6 +2,7 @@ import React from 'react';
 import Color from './Color';
 
 function ColorsBar(props) {
+  //check toolbar file
   return (
     <span className="colors-bar-block">
       <Color colorCode="#F00" active="true"></Color>
@@ -15,5 +16,7 @@ function ColorsBar(props) {
     </span>
   );
 }
+
+const colors = [];
 
 export default ColorsBar;

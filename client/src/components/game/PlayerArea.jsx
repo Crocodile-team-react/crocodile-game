@@ -3,7 +3,7 @@ import PlayerList from './PlayerList';
 import GameChat from './GameChat';
 import { useSelector } from 'react-redux';
 
-function PlayerArea({ onPlayerKick, onStartGameClick, onMessageSend }) {
+function PlayerArea({ onPlayerKick, onStartGameClick, socket }) {
   const hostID = useSelector(state => state.game.roomHostID);
   const userID = useSelector(state => state.user.userID);
   const isGameStarted = useSelector(state => state.game.isGameStarted);
@@ -34,7 +34,7 @@ function PlayerArea({ onPlayerKick, onStartGameClick, onMessageSend }) {
       {
         isGameStarted ?
           (isRoundStarted ?
-            <GameChat onMessageSend={onMessageSend} /> :
+            <GameChat socket={socket} /> :
             <p>Ждем пока игрок выберет слово</p>
           )
           :

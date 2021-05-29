@@ -3,7 +3,11 @@ export default class Tool {
     this.canvas = canvas;
     this.socket = socket;
     this.ctx = canvas.getContext("2d");
-    
+
+    this.strokeStyle = "yellow";
+    // strokeWidt
+    //strokeOpacity
+
     this.areaBlock = document.querySelector(".drawing-area-block");
 
     this.destroyEvents();

@@ -63,7 +63,6 @@ function App() {
           tool: null,
         },
       });
-      console.log("Чищу ложкой");
     });
     socket.current.on("game:newLetter", (letters) => {
       dispatch(setLetters(letters));
@@ -153,9 +152,7 @@ function App() {
       
     }
   };
-  const handleSendMessage = (msg) => {
-    socket.current.emit("game:checkWord", msg);
-  };
+
   const handleStartGameClick = () => {
     socket.current.emit("game:start");
   }
@@ -250,7 +247,6 @@ function App() {
         <Route path="/game/:roomID" exact>
           <GamePage
             socket={socket.current}
-            onMessageSend={handleSendMessage}
             onWordChoose={handleWordChoose}
             onStartGameClick={handleStartGameClick}
             onPlayerKick={handlePlayerKick}
