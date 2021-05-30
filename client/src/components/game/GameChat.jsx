@@ -42,18 +42,7 @@ function GameChat({ socket }) {
     <div className="game-chat-block">
       <div className={(isUserLeader?"host":"") + " box"}>
         <ul className="game-chat-block__messages">
-          {messages.map((msg, i) => <Message key={i} from={msg.from}>{msg.text}</Message>)}
-          <Message from="Kto-to">Tetx</Message>
-          <Message from="Kto-to">Tetx</Message>
-          <Message from="Kto-to">Tetx</Message>
-          <Message from="Kto-to">Tetx</Message>
-          <Message from="Kto-to">Tetx</Message>
-          <Message from="Kto-to">Tetx</Message>
-          <Message from="Kto-to">Tetx</Message>
-          <Message from="Kto-to">Tetx</Message>
-          <Message from="Kto-to">Tetx</Message>
-          <Message from="Kto-to">Tetx</Message>
-          
+          {messages.map((msg, i) => <Message key={i} from={msg.from}>{msg.text}</Message>)}          
         </ul>
       </div>
       {
