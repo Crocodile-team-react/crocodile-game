@@ -82,11 +82,21 @@ export const discardGameData = () => {
     type: gmC.DISCARD_GAME_DATA
   };
 }
+
 export const setGameCounter = (time) => {
   return {
     type: gmC.SET_GAME_COUNTER,
     payload: {
       counter: time
+    }
+  };
+};
+
+export const setNewMessage = (msg) => {
+  return {
+    type: gmC.SET_NEW_MESSAGE,
+    payload: {
+      message: msg
     }
   };
 };

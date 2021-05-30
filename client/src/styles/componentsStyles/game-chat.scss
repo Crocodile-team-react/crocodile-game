@@ -8,10 +8,19 @@
         }
     }
 
+    .host {
+        margin-bottom: 40px;
+    }
+
     .box {
         width: 280px;
         height: 95px;
         overflow-y: auto;
+
+        &::-webkit-scrollbar { width: 5px;}
+        &::-webkit-scrollbar-button {  display: none; }
+        &::-webkit-scrollbar-track-piece { background-color: #FFF; border-radius: 3px;}
+        &::-webkit-scrollbar-thumb { background-color: #22B14C; border-radius: 3px;}
     }
 
     &__messages {
