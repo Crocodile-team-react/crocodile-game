@@ -1,7 +1,9 @@
 import React from 'react';
 import Tool from './Tool';
 import Range from './Range';
-import { Brush, Circle, Rect, Eraser, Line } from '../tools';
+import { Brush, Circle, Rect, Eraser, Line, } from '../tools';
+import CircleFilled from "../tools/CircleFilled"
+import RectFilled from '../tools/RectFilled'
 import { useDispatch, useSelector } from 'react-redux';
 
 function ToolBar({socket}) {
@@ -70,6 +72,26 @@ const tools = [
     active: true,
   },
   {
+    name: "square-fill",
+    Component: RectFilled,
+    active: false,
+  },
+  {
+    name: "circle-fill",
+    Component: CircleFilled,
+    active: false,
+  },
+  {
+    name: "line",
+    Component: Line,
+    active: false,
+  },
+  {
+    name: "eraser",
+    Component: Eraser,
+    active: false,
+  },
+  {
     name: "square",
     Component: Rect,
     active: false,
@@ -78,7 +100,7 @@ const tools = [
     name: "circle",
     Component: Circle,
     active: false,
-  }
+  },
 ]
 
 export default ToolBar;
