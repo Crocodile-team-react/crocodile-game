@@ -1,5 +1,5 @@
-import Tool from "./Tool";
-export default class Eraser extends Tool {
+import Brush from "./Brush";
+export default class Eraser extends Brush {
     constructor(canvas, socket) {
         super(canvas, socket);
         this.listen();
@@ -11,20 +11,8 @@ export default class Eraser extends Tool {
         this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
         this.ctx.strokeStyle = "#fff";
     }
-    mouseUpHandler() {
-        this.mouseDown = false;
-        this.socket.emit("draw", {
-            type: "finish",
-        });
-    }
-    mouseDownHandler(e) {
-        this.mouseDown = true;
-        this.ctx.beginPath();
-        this.ctx.moveTo(
-            e.pageX - this.areaBlock.offsetLeft,
-            e.pageY - this.areaBlock.offsetTop
-        );
-    }
+    
+
     mouseMoveHandler(e) {
         if (this.mouseDown) {
             this.socket.emit("draw", {

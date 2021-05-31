@@ -1,16 +1,6 @@
-import Tool from "./Tool";
+import Rect from "./Rect";
 
-export default class RectFilled extends Tool {
-    constructor(canvas, socket) {
-        super(canvas, socket);
-        this.listen();
-    }
-
-    listen() {
-        this.canvas.onmouseup = this.mouseUpHandler.bind(this);
-        this.canvas.onmousedown = this.mouseDownHandler.bind(this);
-        this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
-    }
+export default class RectFilled extends Rect {
     mouseUpHandler(e) {
         this.mouseDown = false;
         this.socket.emit("draw", {
@@ -21,24 +11,7 @@ export default class RectFilled extends Tool {
             height: e.pageY - this.areaBlock.offsetTop - this.startY,
         });
     }
-    mouseDownHandler(e) {
-        this.mouseDown = true;
-        this.ctx.beginPath();
 
-        this.startX = e.pageX - this.areaBlock.offsetLeft;
-        this.startY = e.pageY - this.areaBlock.offsetTop;
-
-        this.saved = this.canvas.toDataURL();
-    }
-    mouseMoveHandler(e) {
-        if (this.mouseDown) {
-            const currentX = e.pageX - this.areaBlock.offsetLeft;
-            const currentY = e.pageY - this.areaBlock.offsetTop;
-            const width = currentX - this.startX;
-            const height = currentY - this.startY;
-            this.draw(this.startX, this.startY, width, height);
-        }
-    }
     draw(x, y, w, h) {
         const img = new Image();
         img.src = this.saved;
