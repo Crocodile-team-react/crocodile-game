@@ -1,38 +1,30 @@
-import Tool from "./Tool";
-
-export default class Eraser extends Tool {
-  constructor(canvas) {
-    super(canvas);
-    this.listen();
-  }
-
-  listen() {
-    this.canvas.onmouseup = this.mouseUpHandler.bind(this);
-    this.canvas.onmousedown = this.mouseDownHandler.bind(this);
-    this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
-    this.ctx.strokeStyle = "#fff";
-  }
-  mouseUpHandler(e) {
-    this.mouseDown = false;
-  }
-  mouseDownHandler(e) {
-    this.mouseDown = true;
-    this.ctx.beginPath();
-    this.ctx.moveTo(
-      e.pageX - this.areaBlock.offsetLeft,
-      e.pageY - this.areaBlock.offsetTop
-    );
-  }
-  mouseMoveHandler(e) {
-    if (this.mouseDown) {
-      this.draw(
-        e.pageX - this.areaBlock.offsetLeft,
-        e.pageY - this.areaBlock.offsetTop
-      );
+import Brush from "./Brush";
+export default class Eraser extends Brush {
+    constructor(canvas, socket) {
+        super(canvas, socket);
+        this.listen();
     }
-  }
-  draw(x, y) {
-    this.ctx.lineTo(x, y);
-    this.ctx.stroke();
-  }
+
+    listen() {
+        this.canvas.onmouseup = this.mouseUpHandler.bind(this);
+        this.canvas.onmousedown = this.mouseDownHandler.bind(this);
+        this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
+        this.ctx.strokeStyle = "#fff";
+    }
+    
+
+    mouseMoveHandler(e) {
+        if (this.mouseDown) {
+            this.socket.emit("draw", {
+                type: "eraser",
+                x: e.pageX - this.areaBlock.offsetLeft,
+                y: e.pageY - this.areaBlock.offsetTop,
+            });
+        }
+    }
+    static draw(ctx, x, y) {
+        ctx.strokeStyle = "#fff";
+        ctx.lineTo(x, y);
+        ctx.stroke();
+    }
 }
