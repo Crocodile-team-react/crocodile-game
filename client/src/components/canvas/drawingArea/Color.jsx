@@ -5,7 +5,7 @@ function Color(props) {
     <button 
       className={props.active?'active color-block':'color-block'} 
       style={{backgroundColor:props.colorCode}}
-      onClick={f=>f}>
+      onClick={() => props.onclick(props.colorCode)}>
     </button>
   );
 }

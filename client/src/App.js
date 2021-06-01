@@ -57,12 +57,6 @@ function App() {
       dispatch(discardGameData());
       dispatch(setGameCounter(60));
       dispatch(setRoundStarted(true));
-      dispatch({
-        type: "SET_TOOL",
-        payload: {
-          tool: null,
-        },
-      });
     });
     socket.current.on("game:newLetter", (letters) => {
       dispatch(setLetters(letters));

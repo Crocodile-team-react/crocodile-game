@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Tool from './Tool';
 import Range from './Range';
 import { Brush, Circle, Rect, Eraser, Line } from '../tools';
@@ -8,6 +8,13 @@ function ToolBar({socket}) {
   const dispatch = useDispatch();
   const canvas = useSelector(state => state.canvas.canvas);
   const tool = useSelector(state => state.tool.tool);
+  const handleOpacityChange = (opacity) => {
+      dispatch({
+    type: "SET_OPACITY",
+    payload: {
+      opacity
+    }
+  });}
 
   const handleToolClick = (curTool) => {
     tools.forEach(tool => {
@@ -24,7 +31,18 @@ function ToolBar({socket}) {
       }
     });
   }
-  
+  useEffect(() => {
+    if(canvas && socket){
+        dispatch({
+        type: "SET_TOOL",
+        payload: {
+          tool: new tools[0].Component(canvas, socket)
+        }
+      });
+    }
+
+  }, [canvas, socket]);
+
   return (
     <div className="tool-bar-block">
       <div className="tool-bar-block__tools">
@@ -57,7 +75,7 @@ function ToolBar({socket}) {
         <Tool className="thickness xl"></Tool>
       </div>
       <div className="tool-bar-block__opacity">
-        <Range></Range>
+        <Range onChange={handleOpacityChange}></Range>
       </div>
     </div>
   );

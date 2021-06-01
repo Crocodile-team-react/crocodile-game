@@ -9,6 +9,8 @@ export const toolReducer = (state = initialState, action) => {
     case "SET_COLOR": { // create constant and action 
       let newTool = Object.assign({}, state.tool);
       newTool.strokeStyle = action.payload.color;
+      newTool.ctx.strokeStyle = action.payload.color;
+      console.log(action.payload);
       return {
         tool: newTool,
       }
@@ -17,6 +19,13 @@ export const toolReducer = (state = initialState, action) => {
       return {
         tool: action.payload.tool,
       }
+    }
+    case "SET_OPACITY": {
+        let newTool = Object.assign({}, state.tool);
+        newTool.ctx.globalAlpha = action.payload.opacity;
+        return {
+          tool: newTool,
+        }
     }
     default: {
       return state;

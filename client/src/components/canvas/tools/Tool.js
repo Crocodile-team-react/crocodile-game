@@ -4,7 +4,7 @@ export default class Tool {
     this.socket = socket;
     this.ctx = canvas.getContext("2d");
 
-    this.strokeStyle = "yellow";
+    this.strokeStyle = "#000";
     // strokeWidt
     //strokeOpacity
 
