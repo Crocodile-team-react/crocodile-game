@@ -82,7 +82,7 @@ function Canvas({socket, children}) {
         RectFilled.draw(ctx, figure.x, figure.y, figure.width, figure.height);
         break;
       case 'line':
-        Line.draw(ctx, figure.x, figure.y);
+        Line.draw(ctx, figure.x1, figure.y1, figure.x2, figure.y2);
         break;
       case 'circleFilled':
         CircleFilled.draw(ctx, figure.x, figure.y, figure.r);

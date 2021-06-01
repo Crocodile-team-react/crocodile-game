@@ -13,10 +13,15 @@ export default class Line extends Tool {
     }
     mouseUpHandler(e) {
         this.mouseDown = false;
+        const currentX = e.pageX - this.areaBlock.offsetLeft;
+        const currentY = e.pageY - this.areaBlock.offsetTop;
+
         this.socket.emit("draw", {
             type: "line",
-            x: this.startX,
-            y: this.startY,
+            x1: this.startX,
+            y1: this.startY,
+            x2: currentX,
+            y2: currentY,
         });
     }
     mouseDownHandler(e) {
@@ -54,9 +59,10 @@ export default class Line extends Tool {
             this.ctx.stroke();
         };
     }
-    static draw(ctx, x, y) {
+    static draw(ctx, x1, y1, x2, y2 ) {
         ctx.beginPath();
-        ctx.lineTo(x, y);
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
         ctx.stroke();
     }
 }

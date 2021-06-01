@@ -5,7 +5,6 @@ export default class Circle extends Tool {
         super(canvas, socket);
         this.listen();
     }
-
     listen() {
         this.canvas.onmouseup = this.mouseUpHandler.bind(this);
         this.canvas.onmousedown = this.mouseDownHandler.bind(this);
