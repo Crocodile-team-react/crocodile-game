@@ -157,9 +157,12 @@ io.on("connection", function (socket) {
   socket.on("game:checkWord", (msg) => {
     let roomID = socket.roomID;
     let room = roomStore.getRoom(roomID);
+    let users = room.users;
+    room.messages.push(msg);
 
-    if (room.roomWord === msg) {
-      let users = roomStore.getRoomUsers(roomID);
+    broadcastToUsers(users, "game:newMessage", msg);
+
+    if (room.roomWord === msg.text) {
       clearInterval(room.timer);
       roomStore.changeLeader(room.roomID);
       broadcastToUsers(users, "game:endRound", {
