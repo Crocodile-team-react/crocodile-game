@@ -158,6 +158,7 @@ export class InMemoryRoomStore extends RoomStore {
       roomHostID: host.userID,
       roomHostSocketID: host.socketID,
       users: [],
+      messages: [],
       roomWord: "",
       timer: null,
       gameCounter: 60,

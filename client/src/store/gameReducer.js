@@ -95,6 +95,12 @@ export const gameReducer = (state = initialState, action) => {
         roomHostID: action.payload.roomHostID,
       };
     }
+    case gmC.SET_NEW_MESSAGE: {
+      return {
+        ...state,
+        messages: [...state.messages, action.payload.message],
+      };
+    }
     default: {
       return state;
     }

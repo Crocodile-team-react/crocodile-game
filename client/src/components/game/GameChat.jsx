@@ -2,11 +2,15 @@ import React from 'react';
 import Message from './Message';
 import AnswerField from './AnswerField';
 import { useSelector, useDispatch } from 'react-redux';
+import { setNewMessage } from '../../store/actions/gameActions';
 
 function GameChat({ socket }) {
-  // make dispatch object
-  // get state messages;
-  let userID = useSelector(state => state.user.userID);
+  const dispatch = useDispatch();
+
+  let messages = useSelector(state => state.game.messages);
+  let user = useSelector(state => state.user);
+  let userID = user.userID;
+  let userName = user.username;
   let isUserLeader = useSelector(state => {
     for (let i = 0; i < state.game.users.length; i++) {
       if (state.game.users[i].leader) {
@@ -18,28 +22,27 @@ function GameChat({ socket }) {
     }
   })
 
-  const handleSendMessage = (msg) => {
-    // check empty message
-    socket.emit("game:checkWord", msg);
+  const handleSendMessage = (text) => {
+    if(text !== ''){
+      const msg = {from: userName, text: text};
+      socket.emit("game:checkWord", msg);
+    }
   };
 
   React.useEffect(() => {
-
-    socket.on('game:newMessage', () => {
-      // dispatch addNewMessage 
-    }); // on new message
+    socket.on('game:newMessage', msg => {
+      dispatch(setNewMessage(msg));
+    });
     return () => {
-      socket.removeListener('message');
+      socket.removeListener('game:newMessage');
     }
   }, [])
 
   return (
     <div className="game-chat-block">
-      <div className="box">
+      <div className={(isUserLeader?"host":"") + " box"}>
         <ul className="game-chat-block__messages">
-          <Message>Сейчас рисует <b>Player 1</b></Message>
-          <Message from="player">Сейчас рисует</Message>
-          <Message from="player">Сейчас рисует</Message>
+          {messages.map((msg, i) => <Message key={i} from={msg.from}>{msg.text}</Message>)}          
         </ul>
       </div>
       {
