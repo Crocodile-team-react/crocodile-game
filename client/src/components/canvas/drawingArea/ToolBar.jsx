@@ -40,12 +40,6 @@ function ToolBar({socket}) {
               className={className} />
           })
         }
-        {/* <Tool className="rubber"/> */}
-        {/* <Tool className="circle"/>
-        <Tool className="square-fill"/>
-        <Tool className="circle-fill"/>
-        <Tool className="line"/>
-        <Tool className="fill"/> */}
       </div>
       <div className="tool-bar-block__arrows">
         <button className="arrow-previous"></button>
@@ -87,7 +81,7 @@ const tools = [
     active: false,
   },
   {
-    name: "eraser",
+    name: "rubber",
     Component: Eraser,
     active: false,
   },

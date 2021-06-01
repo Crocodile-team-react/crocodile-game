@@ -23,6 +23,7 @@ export default class Eraser extends Brush {
         }
     }
     static draw(ctx, x, y) {
+        ctx.strokeStyle = "#fff";
         ctx.lineTo(x, y);
         ctx.stroke();
     }
