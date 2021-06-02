@@ -4,9 +4,9 @@ import { Brush, Rect, Circle, Eraser,  Line} from "./tools";
 import CircleFilled from "./tools/CircleFilled"
 import RectFilled from './tools/RectFilled'
 
-function Canvas({socket, children}) {
+function Canvas({socket,canvasRef, children}) {
   const dispatch = useDispatch();
-  const canvasRef = React.useRef();
+  
   const userID = useSelector(state => state.user.userID);
   const leader = useSelector(state => state.game.users.find(user => {
     return user.leader;
@@ -95,6 +95,7 @@ function Canvas({socket, children}) {
       }
     }
   }
+ 
   return (
     <div className="canvas-block">
       {children}
@@ -105,4 +106,4 @@ function Canvas({socket, children}) {
   )
 }
 
-export default Canvas
+export default Canvas;

@@ -1,8 +1,8 @@
 import React from 'react';
 import Modal from './Modal';
 
-function WinnerModal({children, word}) {
-
+function WinnerModal({children, word, handelClick}){
+  
   return (
     <Modal w="280" className="winner-modal-block">
       <h3 className="title">{word}</h3>
@@ -10,7 +10,7 @@ function WinnerModal({children, word}) {
         children
       }
       <form className="form-with-inp-but">
-          <button className="button-long-filled copy" type="submit">скачать картинку</button>
+         <button className=" button-long-filled copy" onClick={handelClick}>скачать картинку</button>
       </form>
     </Modal>
   );

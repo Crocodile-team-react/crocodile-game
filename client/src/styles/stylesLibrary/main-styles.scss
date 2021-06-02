@@ -148,6 +148,8 @@ $background-player: #4FAA69;
   width: 250px;
   height: 40px;
   display: flex;
+  justify-content: center;
+  vertical-align: middle;
 
   .button-short-filled {
     height: 42px;
@@ -157,6 +159,15 @@ $background-player: #4FAA69;
   .input {
     width: 210px;
   }
+  a{
+    color: #F1F1F1;
+    text-decoration:none;
+    display: inline-block;
+    margin: auto;
+    font-size: 14px;
+    width: 250px;
+  }
+  
 }
 
 .avatar-big,
