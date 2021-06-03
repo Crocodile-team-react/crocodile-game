@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Canvas, ToolBar, Avatar, Letters, Timer, ColorsBar, ChooseModal, WinnerModal } from '../index.js';
 import { useSelector, useDispatch } from 'react-redux';
 import { discardGameData } from '../../store/actions/gameActions';
@@ -12,7 +12,11 @@ function DrawingArea({ onWordChoose, socket}) {
   const isRoundStarted = useSelector(state => state.game.isRoundStarted);
   const modalData = useSelector(state => state.game.gameModal);
   const wordHint = useSelector(state => state.user.wordHint);
-  const canvasRef = React.useRef();
+  const [img, setImg] = useState({
+    download: null,
+    href: null,
+  });
+  
   React.useEffect(() => {
     if (modalData.isSeen) {
       setTimeout(() => {
@@ -20,19 +24,21 @@ function DrawingArea({ onWordChoose, socket}) {
       }, 5000)
     }
   }, [modalData.isSeen]);
-  const handelClick = () => {
-     const link = document.createElement("a");
-     link.download = wordHint +".jpeg";
-     link.href=canvasRef?.current?.toDataURL('image/jpeg');
-     link.click();
+
+  
+
+  const onGameEndScreenShot = (canvasRef) => {
+    setImg({download:  wordHint +".jpeg", href:canvasRef.current.toDataURL('image/jpeg')});
   }
+  
+  
 
   return (
     <div className="drawing-area-block">
-      <Canvas socket={socket} canvasRef={canvasRef}>
+      <Canvas socket={socket}  onGameEndScreenShot={onGameEndScreenShot} >
         {
           leader &&
-          <Avatar avatarID={leader.avatarID} username={leader.username}/>
+          <Avatar avatarID={leader.avatarID} username={leader.username} />
         }
         <Letters/>
         <Timer/>
@@ -47,7 +53,7 @@ function DrawingArea({ onWordChoose, socket}) {
         {
           modalData.isSeen &&
           
-          <WinnerModal word={modalData.word}  handelClick={handelClick}>
+          <WinnerModal word={modalData.word}  img={img}>
             <p className="win-text">{modalData.winner ? "Победил игрок " + modalData.winner: "Никто не угадал слово"}</p>
             <p className="win-text">Новая игра начнется через 5 секунд.</p>
           </WinnerModal>
@@ -62,9 +68,6 @@ function DrawingArea({ onWordChoose, socket}) {
         !modalData.isSeen && leader && leader.userID === userID && isGameStarted && !isRoundStarted &&
         <ChooseModal onWordChoose={onWordChoose}></ChooseModal>
       }
-       <form className="form-with-inp-but">
-         <button className=" button-long-filled copy" onClick={handelClick}>скачать картинку</button>
-      </form>
     </div>
   )
 }

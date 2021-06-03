@@ -149,7 +149,6 @@ $background-player: #4FAA69;
   height: 40px;
   display: flex;
   justify-content: center;
-  vertical-align: middle;
 
   .button-short-filled {
     height: 42px;
@@ -160,9 +159,11 @@ $background-player: #4FAA69;
     width: 210px;
   }
   a{
+    text-align: center;
     color: #F1F1F1;
     text-decoration:none;
     display: inline-block;
+    text-align: center;
     margin: auto;
     font-size: 14px;
     width: 250px;

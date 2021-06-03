@@ -4,15 +4,14 @@ import { Brush, Rect, Circle, Eraser,  Line} from "./tools";
 import CircleFilled from "./tools/CircleFilled"
 import RectFilled from './tools/RectFilled'
 
-function Canvas({socket,canvasRef, children}) {
+function Canvas({socket, children, onGameEndScreenShot}) {
   const dispatch = useDispatch();
-  
   const userID = useSelector(state => state.user.userID);
   const leader = useSelector(state => state.game.users.find(user => {
     return user.leader;
   }));
   const isRoundStarted = useSelector(state => state.game.isRoundStarted);
-
+  const canvasRef = React.useRef();
   React.useEffect(() => {
     if (!isRoundStarted) {
       drawHandler({ type: "clear" })
@@ -88,6 +87,7 @@ function Canvas({socket,canvasRef, children}) {
         CircleFilled.draw(ctx, figure.x, figure.y, figure.r);
         break;
       case "clear": {
+        onGameEndScreenShot(canvasRef);
         ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
       }
       default: {
