@@ -100,3 +100,12 @@ export const setNewMessage = (msg) => {
     }
   };
 };
+
+export const setTotalPlayers = (num) => {
+  return {
+    type: gmC.SET_TOTAL_PLAYERS,
+    payload: {
+      totalPlayers: num,
+    }
+  }
+}

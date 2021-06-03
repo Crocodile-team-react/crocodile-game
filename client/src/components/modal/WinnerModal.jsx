@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from './Modal';
 
-function WinnerModal({children, word}) {
+function WinnerModal({children, word, onDownloadClick}) {
 
   return (
     <Modal w="280" className="winner-modal-block">
@@ -10,7 +10,7 @@ function WinnerModal({children, word}) {
         children
       }
       <form className="form-with-inp-but">
-          <button className="button-long-filled copy" type="submit">скачать картинку</button>
+        <button onClick={onDownloadClick} className="button-long-filled copy" type="submit">скачать картинку</button>
       </form>
     </Modal>
   );

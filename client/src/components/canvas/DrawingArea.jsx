@@ -1,9 +1,10 @@
 import React from 'react';
 import { Canvas, ToolBar, Avatar, Letters, Timer, ColorsBar, ChooseModal, WinnerModal } from '../index.js';
 import { useSelector, useDispatch } from 'react-redux';
+import { setWordHint } from '../../store/actions/userActions';
 import { discardGameData } from '../../store/actions/gameActions';
 
-function DrawingArea({ onWordChoose, socket}) {
+function DrawingArea({ socket }) {
   const dispatch = useDispatch();
   const userID = useSelector(state => state.user.userID);
   const leader = useSelector(state => state.game.users.find(user => {
@@ -13,6 +14,23 @@ function DrawingArea({ onWordChoose, socket}) {
   const isRoundStarted = useSelector(state => state.game.isRoundStarted);
   const modalData = useSelector(state => state.game.gameModal);
   const wordHint = useSelector(state => state.user.wordHint);
+  const canvas = useSelector(state => state.canvas.canvas);
+
+  const handleDownloadClick = (e) => {
+    e.preventDefault();
+    const dataUrl = canvas.toDataURL();
+    const link = document.createElement('a');
+    link.download = (Math.random()*1e18).toString(26) + '.jpg';
+    link.href = dataUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+  const handleWordChoose = (word) => {
+    dispatch(setWordHint(word));
+    socket.emit("game:wordChoose", word);
+  }
+
   React.useEffect(() => {
     if (modalData.isSeen) {
       setTimeout(() => {
@@ -40,7 +58,7 @@ function DrawingArea({ onWordChoose, socket}) {
         }
         {
           modalData.isSeen &&
-          <WinnerModal word={modalData.word}>
+          <WinnerModal word={modalData.word} onDownloadClick={handleDownloadClick}>
             <p className="win-text">{modalData.winner ? "Победил игрок " + modalData.winner : "Никто не угадал слово"}</p>
             <p className="win-text">Новая игра начнется через 5 секунд.</p>
           </WinnerModal>
@@ -53,7 +71,7 @@ function DrawingArea({ onWordChoose, socket}) {
       }
       {
         !modalData.isSeen && leader && leader.userID === userID && isGameStarted && !isRoundStarted &&
-        <ChooseModal onWordChoose={onWordChoose}></ChooseModal>
+        <ChooseModal onWordChoose={handleWordChoose}></ChooseModal>
       }
     </div>
   )

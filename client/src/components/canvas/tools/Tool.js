@@ -4,10 +4,6 @@ export default class Tool {
     this.socket = socket;
     this.ctx = canvas.getContext("2d");
 
-    this.strokeStyle = "yellow";
-    // strokeWidt
-    //strokeOpacity
-
     this.areaBlock = document.querySelector(".drawing-area-block");
 
     this.destroyEvents();
@@ -22,7 +18,16 @@ export default class Tool {
   set lineWidth(width) {
     this.ctx.lineWidth = width;
   }
-
+  get strokeStyle() {
+    return this.ctx.strokeStyle;
+  }
+  get lineWidth() {
+    return this.ctx.lineWidth;
+  }
+  get fillStyle() {
+    return this.ctx.fillStyle;
+  }
+  
   destroyEvents() {
     this.canvas.onmouseup = null;
     this.canvas.onmousedown = null;

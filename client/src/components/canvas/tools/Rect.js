@@ -19,6 +19,8 @@ export default class Rect extends Tool {
       y: this.startY,
       width: e.pageX - this.areaBlock.offsetLeft - this.startX,
       height: e.pageY - this.areaBlock.offsetTop - this.startY,
+      strokeStyle: this.strokeStyle,
+      lineWidth: this.lineWidth,
     });
   }
   mouseDownHandler(e) {
@@ -49,7 +51,9 @@ export default class Rect extends Tool {
       this.ctx.stroke();
     }
   }
-  static draw(ctx, x, y, w, h) {
+  static draw(ctx, x, y, w, h, strokeStyle, lineWidth) {
+    ctx.strokeStyle = strokeStyle;
+    ctx.lineWidth = lineWidth;
     ctx.beginPath();
     ctx.rect(x, y, w, h);
     ctx.stroke();

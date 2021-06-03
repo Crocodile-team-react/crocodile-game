@@ -1,9 +1,15 @@
 .start-page-block {
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
 
+    .start-page__content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    .player-number {
+        position: absolute;
+        left: 100px;
+    }
     .logo {
         width: 266px;
         height: 210px;

@@ -10,10 +10,17 @@ const initialState = {
   gameModal: { isSeen: false, winner: null, word: "" },
   counter: 500,
   letters: [],
+  totalPlayers: 0,
 };
 
 export const gameReducer = (state = initialState, action) => {
   switch (action.type) {
+    case gmC.SET_TOTAL_PLAYERS: {
+      return {
+        ...state,
+        totalPlayers: action.payload.totalPlayers
+      }
+    }
     case gmC.COUNTER_TICK: {
       let counter = state.counter - 1;
       return {
@@ -70,23 +77,6 @@ export const gameReducer = (state = initialState, action) => {
       return {
         ...state,
         users: action.payload.users,
-      };
-    }
-    case gmC.ADD_USER: {
-      const newUsers = [...state.users];
-      newUsers.push(action.payload.user);
-      return {
-        ...state,
-        users: newUsers,
-      };
-    }
-    case gmC.REMOVE_USER: {
-      const newUsers = state.users.filter(
-        (user) => user.userID !== action.payload.userID
-      );
-      return {
-        ...state,
-        users: newUsers,
       };
     }
     case gmC.SET_ROOM_HOSTID: {

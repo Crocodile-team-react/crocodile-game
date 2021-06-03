@@ -3,24 +3,33 @@ import PlayerList from './PlayerList';
 import GameChat from './GameChat';
 import { useSelector } from 'react-redux';
 
-function PlayerArea({ onPlayerKick, onStartGameClick, socket }) {
+function PlayerArea({ socket }) {
   const hostID = useSelector(state => state.game.roomHostID);
   const userID = useSelector(state => state.user.userID);
   const isGameStarted = useSelector(state => state.game.isGameStarted);
   const isRoundStarted = useSelector(state => state.game.isRoundStarted);
 
+  const handlePlayerKick = (userID) => {
+    socket.emit("room:kickPlayer", userID);
+  };
+  const handleStartGameClick = () => {
+    socket.emit("game:start");
+  }
+  const handleGamePrivateClick = (e) => {
+    socket.emit("game:private", e.target.checked);
+  }
+
   let startGameBlock = "";
   if (hostID === userID) {
     startGameBlock = <div className="start-game-block">
       <div className="start-game-block__private">
-        <input id="in" type="checkbox" className="checkbox" />
+        <input onChange={handleGamePrivateClick} id="in" type="checkbox" className="checkbox" />
         <label htmlFor="in">
           Сделать комнату приватной
         </label>
       </div>
       <div className="start-game-block__buttons">
-        <button className="button-medium-unfilled" onClick={f => f}>Пригласить</button>
-        <button className="button-medium-filled" onClick={onStartGameClick}>Начать</button>
+        <button className="button-medium-filled" onClick={handleStartGameClick}>Начать</button>
       </div>
     </div>
   } else {
@@ -30,7 +39,7 @@ function PlayerArea({ onPlayerKick, onStartGameClick, socket }) {
   }
   return (
     <div className="player-area-block">
-      <PlayerList onPlayerKick={onPlayerKick} />
+      <PlayerList onPlayerKick={handlePlayerKick} />
       {
         isGameStarted ?
           (isRoundStarted ?

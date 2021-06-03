@@ -8,7 +8,8 @@ function AnswerField({ onMessageSend }) {
       <button
         onClick={(e) => {
           e.preventDefault();
-          onMessageSend(inputRef.current.value.trim())
+          onMessageSend(inputRef.current.value.trim().toLowerCase())
+          inputRef.current.value = "";
         }}
         className="button-short-filled" type="submit">Ок</button>
     </form>

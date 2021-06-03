@@ -17,11 +17,17 @@ export default class Line extends Tool {
         const currentY = e.pageY - this.areaBlock.offsetTop;
 
         this.socket.emit("draw", {
-            type: "line",
-            x1: this.startX,
-            y1: this.startY,
-            x2: currentX,
-            y2: currentY,
+          type: "line",
+          x1: this.startX,
+          y1: this.startY,
+          x2: currentX,
+          y2: currentY,
+          strokeStyle: this.strokeStyle,
+          lineWidth: this.lineWidth,
+        });
+        
+        this.socket.emit("draw", {
+          type: "finish",
         });
     }
     mouseDownHandler(e) {
@@ -59,7 +65,9 @@ export default class Line extends Tool {
             this.ctx.stroke();
         };
     }
-    static draw(ctx, x1, y1, x2, y2 ) {
+    static draw(ctx, x1, y1, x2, y2, strokeStyle, lineWidth) {
+        ctx.strokeStyle = strokeStyle;
+        ctx.lineWidth = lineWidth;
         ctx.beginPath();
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);

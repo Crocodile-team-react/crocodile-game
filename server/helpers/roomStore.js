@@ -14,8 +14,9 @@ class RoomStore {
   isRoomAvailable(roomID, userID) {}
   kickUser(roomID, hostID, userID) {}
   setRoomWord(roomID, word) {}
-  changeLeader(roomID) { }
-  removeRoom(roomID) { }
+  changeLeader(roomID) {}
+  removeRoom(roomID) {}
+  setRoomStatus(roomID, isPrivate) { }
 }
 
 export class InMemoryRoomStore extends RoomStore {
@@ -33,6 +34,16 @@ export class InMemoryRoomStore extends RoomStore {
     this.getRoom = this.roomDecorator(this.getRoom);
     this.changeLeader = this.roomDecorator(this.changeLeader);
     this.removeRoom = this.roomDecorator(this.removeRoom);
+    this.setRoomStatus = this.roomDecorator(this.setRoomStatus);
+  }
+  setRoomStatus(roomID, isPrivate) {
+    let room = this.rooms.allRooms[roomID];
+    room.isRoomOpen = !isPrivate;
+    let newOpenedRoomsID = this.rooms.openedRoomsID.filter(id => id !== roomID);
+    if (!isPrivate) {
+      newOpenedRoomsID.push(roomID);
+    }
+    this.rooms.openedRoomsID = newOpenedRoomsID;
   }
   removeRoom(roomID) {
     this.rooms.openedRoomsID = this.rooms.openedRoomsID.filter(id => id !== roomID);
@@ -172,7 +183,18 @@ export class InMemoryRoomStore extends RoomStore {
     }
     return room.roomID;
   }
-  findOpenRoom() {}
+  findOpenRoom() {
+    let url = this.rooms.openedRoomsID.find(id => {
+      if (this.rooms.allRooms[id].users.length < 5) {
+        return true;
+      }
+      return false;
+    })
+    if (!url) {
+      url = null;
+    }
+    return url;
+  }
 
   roomDecorator(func) {
     return function (roomID, ...rest) {

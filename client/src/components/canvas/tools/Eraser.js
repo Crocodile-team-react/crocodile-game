@@ -2,16 +2,7 @@ import Brush from "./Brush";
 export default class Eraser extends Brush {
     constructor(canvas, socket) {
         super(canvas, socket);
-        this.listen();
     }
-
-    listen() {
-        this.canvas.onmouseup = this.mouseUpHandler.bind(this);
-        this.canvas.onmousedown = this.mouseDownHandler.bind(this);
-        this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
-        this.ctx.strokeStyle = "#fff";
-    }
-    
 
     mouseMoveHandler(e) {
         if (this.mouseDown) {
@@ -19,9 +10,11 @@ export default class Eraser extends Brush {
                 type: "eraser",
                 x: e.pageX - this.areaBlock.offsetLeft,
                 y: e.pageY - this.areaBlock.offsetTop,
+                lineWidh: this.lineWidth,
             });
         }
     }
+    
     static draw(ctx, x, y) {
         ctx.strokeStyle = "#fff";
         ctx.lineTo(x, y);

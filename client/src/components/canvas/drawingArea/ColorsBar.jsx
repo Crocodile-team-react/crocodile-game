@@ -1,22 +1,26 @@
 import React from 'react';
 import Color from './Color';
+import { setColor } from '../../../store/actions/toolActions';
+import { useDispatch } from 'react-redux';
 
-function ColorsBar(props) {
-  //check toolbar file
+function ColorsBar() {
+  const dispatch = useDispatch();
+  
+  const handleColorChange = (color) => {
+    dispatch(setColor(color));
+  }
+
   return (
     <span className="colors-bar-block">
-      <Color colorCode="#F00" active="true"></Color>
-      <Color colorCode="#0F0"></Color>
-      <Color colorCode="#00F"></Color>
-      <Color colorCode="#FF0"></Color>
-      <Color colorCode="#0FF"></Color>
-      <Color colorCode="#FFF"></Color>
-      <Color colorCode="#AAA"></Color>
-      <Color colorCode="#555"></Color>
+      {
+        colors.map((code) => {
+          return <Color key={code} onClick={handleColorChange} colorCode={code} active={false}/>
+        })
+      }
     </span>
   );
 }
 
-const colors = [];
+const colors = ["#000", "#F00", "#0F0", "#00F", "#FF0" ,"#0FF", "#FFF", "#AAA", "#555"];
 
 export default ColorsBar;

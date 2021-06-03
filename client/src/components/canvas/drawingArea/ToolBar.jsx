@@ -1,32 +1,52 @@
 import React from 'react';
 import Tool from './Tool';
 import Range from './Range';
-import { Brush, Circle, Rect, Eraser, Line, } from '../tools';
-import CircleFilled from "../tools/CircleFilled"
-import RectFilled from '../tools/RectFilled'
+import { Brush, Circle, Rect, Eraser, Line, RectFilled, CircleFilled } from '../tools';
 import { useDispatch, useSelector } from 'react-redux';
+import { setTool, setLineWidth } from '../../../store/actions/toolActions';
 
 function ToolBar({socket}) {
   const dispatch = useDispatch();
   const canvas = useSelector(state => state.canvas.canvas);
-  const tool = useSelector(state => state.tool.tool);
+  const [tools, setTools] = React.useState(toolsArr);
+  const [thickness, setThickness] = React.useState(thicknessArr);
 
-  const handleToolClick = (curTool) => {
-    tools.forEach(tool => {
-      tool.active = false;
-      if (tool.name === curTool.name) {
-        tool.active = true;
+  const handleThicknessClick = (curTool) => {
+
+    let newThickness = thickness.map(item => {
+      let newThicknessItem = {
+        ...item,
+        active: false,
       }
-      return tool;
+      if (newThicknessItem.name === curTool.name) {
+        newThicknessItem.active = true;
+      }
+      return newThicknessItem;
     })
-    dispatch({
-      type: "SET_TOOL",
-      payload: {
-        tool: new curTool.Component(canvas, socket)
-      }
-    });
+
+    setThickness(newThickness);
+    dispatch(setLineWidth(curTool.value));
   }
-  
+  const handleToolClick = (curTool) => {
+
+    let newTools = tools.map(tool => {
+      let newTool = {
+        ...tool,
+        active: false,
+      }
+      if (newTool.name === curTool.name) {
+        newTool.active = true;
+      }
+      return newTool;
+    })
+
+    setTools(newTools);
+
+    dispatch(setTool(new curTool.Component(canvas, socket)));
+  }
+  const handleRangeChange = (e) => {
+    console.log(e.target.value);
+  }
   return (
     <div className="tool-bar-block">
       <div className="tool-bar-block__tools">
@@ -46,20 +66,51 @@ function ToolBar({socket}) {
         <button className="arrow-next"></button>
       </div>
       <div className="tool-bar-block__thickness">
-        <Tool className="thickness xs"></Tool>
-        <Tool className="thickness s active"></Tool>
-        <Tool className="thickness m"></Tool>
-        <Tool className="thickness l"></Tool>
-        <Tool className="thickness xl"></Tool>
+        {
+          thickness.map(tool => {
+            let className = tool.name;
+            if (tool.active) {
+              className += " active";
+            }
+            return <Tool key={tool.name} onToolClick={() => handleThicknessClick(tool)}
+              className={className}/>
+          })
+        }
       </div>
       <div className="tool-bar-block__opacity">
-        <Range></Range>
+        <Range onChange={handleRangeChange}></Range>
       </div>
     </div>
   );
 }
-
-const tools = [
+const thicknessArr = [
+  {
+    name: "thickness xs",
+    active: true,
+    value: 2,
+  },
+  {
+    name: "thickness s",
+    active: false,
+    value: 5,
+  },
+  {
+    name: "thickness m",
+    active: false,
+    value: 7,
+  },
+  {
+    name: "thickness l",
+    active: false,
+    value: 10,
+  },
+  {
+    name: "thickness xl",
+    active: false,
+    value: 15,
+  },
+]
+const toolsArr = [
   {
     name: "pencil",
     Component: Brush,

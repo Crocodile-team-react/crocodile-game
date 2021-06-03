@@ -12,10 +12,12 @@ export default class CircleFilled extends Circle {
         );
         this.draw(this.startX, this.startY, radius);
         this.socket.emit("draw", {
-            type: "circleFilled",
-            x: this.startX,
-            y: this.startY,
-            r: radius,
+          type: "circleFilled",
+          x: this.startX,
+          y: this.startY,
+          r: radius,
+          strokeStyle: this.strokeStyle,
+          lineWidth: this.lineWidth,
         });
     }
 
@@ -37,7 +39,9 @@ export default class CircleFilled extends Circle {
             this.ctx.stroke();
         };
     }
-    static draw(ctx, x, y, r) {
+    static draw(ctx, x, y, r, strokeStyle, lineWidth) {
+        ctx.strokeStyle = strokeStyle;
+        ctx.lineWidth = lineWidth;
         ctx.beginPath();
         ctx.arc(x, y, r, 0, 2 * Math.PI);
         ctx.fill();

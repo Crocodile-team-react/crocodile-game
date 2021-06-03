@@ -70,6 +70,8 @@ io.on("connection", function (socket) {
     avatarID: socket.avatarID,
   })
 
+  io.emit("newPlayer", { totalPlayers: io.engine.clientsCount });
+
   socket.on("draw", (figure) => {
     let room = roomStore.getRoom(socket.roomID);
     broadcastToUsers(room.users, "draw", figure);
@@ -77,14 +79,6 @@ io.on("connection", function (socket) {
 
   socket.on("room:getInfo", callback => {
     callback(roomStore);
-  });
-
-  socket.on("game:start", () => {
-    let room = roomStore.getRoom(socket.roomID);
-    let users = room.users;
-    room.isGameStarted = true;
-    room.users[0].leader = true;
-    broadcastToUsers(users, "game:start", {users});
   });
 
   socket.on("image:save", (img) => {
@@ -111,6 +105,33 @@ io.on("connection", function (socket) {
     }
   })
 
+  socket.on("game:start", () => {
+    let room = roomStore.getRoom(socket.roomID);
+    let users = room.users;
+    room.isGameStarted = true;
+    room.users[0].leader = true;
+    broadcastToUsers(users, "game:start", { users });
+  });
+  socket.on("game:findGame", (callback) => {
+    let timerCounter = 0;
+    let timer = setInterval(() => {
+      timerCounter++;
+      let url = roomStore.findOpenRoom();
+      console.log(url);
+      console.log(timerCounter);
+      if (url !== null) {
+        clearInterval(timer);
+        callback(url);
+      }
+      if (timerCounter >= 10) {
+        clearInterval(timer);
+        callback(null);
+      }
+    }, 1000)
+  })
+  socket.on("game:private", (isPrivate) => {
+    roomStore.setRoomStatus(socket.roomID, isPrivate);
+  })
   socket.on("game:wordChoose", (word) => {
     let roomID = socket.roomID;
     let room = roomStore.getRoom(roomID);
@@ -230,6 +251,7 @@ io.on("connection", function (socket) {
 
 http.listen(PORT, () => {
   console.log("Server has been started on " + PORT);
+  
 });
 
 const socketLeaveRoom = (socket) => {
