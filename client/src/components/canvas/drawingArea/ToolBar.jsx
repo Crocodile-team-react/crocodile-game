@@ -25,6 +25,7 @@ function ToolBar({socket}) {
     })
 
     setThickness(newThickness);
+    console.log(curTool.value)
     dispatch(setLineWidth(curTool.value));
   }
   const handleToolClick = (curTool) => {

@@ -81,13 +81,13 @@ function Canvas({socket, children}) {
         Eraser.draw(ctx, figure.x, figure.y, figure.lineWidth);
         break;
       case 'rectFilled':
-        RectFilled.draw(ctx, figure.x, figure.y, figure.width, figure.height, figure.strokeStyle, figure.lineWidth);
+        RectFilled.draw(ctx, figure.x, figure.y, figure.width, figure.height, figure.strokeStylegit remote add origin);
         break;
       case 'line':
         Line.draw(ctx, figure.x1, figure.y1, figure.x2, figure.y2, figure.strokeStyle, figure.lineWidth);
         break;
       case 'circleFilled':
-        CircleFilled.draw(ctx, figure.x, figure.y, figure.r, figure.strokeStyle, figure.lineWidth);
+        CircleFilled.draw(ctx, figure.x, figure.y, figure.r, figure.strokeStyle);
         break;
       case "clear": {
         ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
