@@ -20,7 +20,7 @@ function DrawingArea({ socket }) {
     e.preventDefault();
     const dataUrl = canvas.toDataURL();
     const link = document.createElement('a');
-    link.download = (Math.random()*1e18).toString(26) + '.jpg';
+    link.download = wordHint + '.jpg';
     link.href = dataUrl;
     document.body.appendChild(link);
     link.click();

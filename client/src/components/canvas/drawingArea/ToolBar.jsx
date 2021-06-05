@@ -3,14 +3,14 @@ import Tool from './Tool';
 import Range from './Range';
 import { Brush, Circle, Rect, Eraser, Line, RectFilled, CircleFilled } from '../tools';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTool, setLineWidth } from '../../../store/actions/toolActions';
+import { setTool, setLineWidth, setOpacity, setColor } from '../../../store/actions/toolActions';
 
 function ToolBar({socket}) {
   const dispatch = useDispatch();
   const canvas = useSelector(state => state.canvas.canvas);
+  const color = useSelector(state => state.tool.color)
   const [tools, setTools] = React.useState(toolsArr);
   const [thickness, setThickness] = React.useState(thicknessArr);
-
   const handleThicknessClick = (curTool) => {
 
     let newThickness = thickness.map(item => {
@@ -45,7 +45,12 @@ function ToolBar({socket}) {
     dispatch(setTool(new curTool.Component(canvas, socket)));
   }
   const handleRangeChange = (e) => {
-    console.log(e.target.value);
+    let opasity = "0." + e.target.value;
+    dispatch(setOpacity(opasity));
+    let arr = color.split(', ');
+    arr[3] = opasity + ")"
+    const newColor = arr.join(", ")
+    dispatch(setColor(newColor))
   }
   return (
     <div className="tool-bar-block">

@@ -4,13 +4,13 @@ export default class RectFilled extends Rect {
     mouseUpHandler(e) {
         this.mouseDown = false;
         this.socket.emit("draw", {
-          type: "rectFilled",
-          x: this.startX,
-          y: this.startY,
-          width: e.pageX - this.areaBlock.offsetLeft - this.startX,
-          height: e.pageY - this.areaBlock.offsetTop - this.startY,
-          strokeStyle: this.strokeStyle,
-          lineWidth: this.lineWidth,
+            type: "rectFilled",
+            x: this.startX,
+            y: this.startY,
+            width: e.pageX - this.areaBlock.offsetLeft - this.startX,
+            height: e.pageY - this.areaBlock.offsetTop - this.startY,
+            strokeStyle: this.strokeStyle,
+            lineWidth: this.lineWidth,
         });
     }
 
@@ -30,9 +30,12 @@ export default class RectFilled extends Rect {
             this.ctx.rect(x, y, w, h);
             this.ctx.fill();
             this.ctx.stroke();
+            this.ctx.fillStyle = this.strokeStyle;
         };
     }
     static draw(ctx, x, y, w, h, strokeStyle, lineWidth) {
+        
+        ctx.fillStyle = strokeStyle;
         ctx.strokeStyle = strokeStyle;
         ctx.lineWidth = lineWidth;
         ctx.beginPath();

@@ -1,9 +1,10 @@
 import { gmC } from "../helpers/constants";
 
 const initialState = {
-  tool: null,
-  color: "#000",
-  lineWidth: 2,
+    tool: null,
+    color: "#000",
+    lineWidth: 2,
+    opacity: 1,  
 };
 
 export const toolReducer = (state = initialState, action) => {
@@ -41,6 +42,17 @@ export const toolReducer = (state = initialState, action) => {
         ...state,
         tool,
       }
+    }
+    case gmC.SET_OPACITY:{
+      let tool = state.tool;
+      if (tool !== null) {
+          tool.opacity  = action.payload.opacity;
+      }
+      return {
+          ...state,
+          tool: tool,
+          opacity: action.payload.opacity,
+      };
     }
     default: {
       return state;

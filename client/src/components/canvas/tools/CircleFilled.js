@@ -1,7 +1,6 @@
 import Circle from "./Circle";
 
 export default class CircleFilled extends Circle {
-
     mouseUpHandler(e) {
         this.mouseDown = false;
         const currentX = e.pageX - this.areaBlock.offsetLeft;
@@ -12,12 +11,12 @@ export default class CircleFilled extends Circle {
         );
         this.draw(this.startX, this.startY, radius);
         this.socket.emit("draw", {
-          type: "circleFilled",
-          x: this.startX,
-          y: this.startY,
-          r: radius,
-          strokeStyle: this.strokeStyle,
-          lineWidth: this.lineWidth,
+            type: "circleFilled",
+            x: this.startX,
+            y: this.startY,
+            r: radius,
+            strokeStyle: this.strokeStyle,
+            lineWidth: this.lineWidth,
         });
     }
 
@@ -37,9 +36,11 @@ export default class CircleFilled extends Circle {
             this.ctx.arc(x, y, r, 0, 2 * Math.PI);
             this.ctx.fill();
             this.ctx.stroke();
+            this.ctx.fillStyle = this.strokeStyle;
         };
     }
     static draw(ctx, x, y, r, strokeStyle, lineWidth) {
+        ctx.fillStyle = strokeStyle;
         ctx.strokeStyle = strokeStyle;
         ctx.lineWidth = lineWidth;
         ctx.beginPath();
