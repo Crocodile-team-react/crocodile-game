@@ -2,9 +2,9 @@ import { gmC } from "../helpers/constants";
 
 const initialState = {
     tool: null,
-    color: "#000",
+    color: "rgba(0, 0, 0, 1)",
     lineWidth: 2,
-    opacity: 1,  
+    opacity: 1,
 };
 
 export const toolReducer = (state = initialState, action) => {

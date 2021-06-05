@@ -81,7 +81,7 @@ function Canvas({socket, children}) {
         Eraser.draw(ctx, figure.x, figure.y, figure.lineWidth);
         break;
       case 'rectFilled':
-        RectFilled.draw(ctx, figure.x, figure.y, figure.width, figure.height, figure.strokeStylegit remote add origin);
+        RectFilled.draw(ctx, figure.x, figure.y, figure.width, figure.height, figure.strokeStylegit );
         break;
       case 'line':
         Line.draw(ctx, figure.x1, figure.y1, figure.x2, figure.y2, figure.strokeStyle, figure.lineWidth);
