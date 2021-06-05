@@ -6,7 +6,6 @@ import { useDispatch , useSelector} from 'react-redux';
 function ColorsBar() {
   const dispatch = useDispatch();
   const opacity = useSelector(state => state.tool.opacity);
-  console.log(opacity)
   const colors = [`rgba(0, 0, 0, ${opacity} )`, 
                   `rgba(255, 0, 0, ${opacity})`,
                   `rgba(0, 255, 0, ${opacity})`, 

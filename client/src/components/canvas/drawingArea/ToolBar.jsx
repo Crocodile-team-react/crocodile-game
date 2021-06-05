@@ -49,9 +49,9 @@ function ToolBar({socket}) {
     let opasity = "0." + e.target.value;
     dispatch(setOpacity(opasity));
     let arr = color.split(', ');
-    arr[3] = opasity + ")"
-    const newColor = arr.join(", ")
-    dispatch(setColor(newColor))
+    arr[3] = opasity + ")";
+    const newColor = arr.join(", ");
+    dispatch(setColor(newColor));
   }
   return (
     <div className="tool-bar-block">
