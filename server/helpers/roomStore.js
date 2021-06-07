@@ -59,7 +59,9 @@ export class InMemoryRoomStore extends RoomStore {
     let room = this.rooms.allRooms[roomID];
     if (room.users.length) {
       let nextLeaderIndex;
-      let curLeaderIndex = room.users.findIndex((user) => user.leader);
+      let curLeaderIndex = room.users.findIndex(
+        (user) => user.userID === room.roomLeaderID
+      );
 
       if (curLeaderIndex === -1) {
         nextLeaderIndex = 0;
@@ -68,10 +70,8 @@ export class InMemoryRoomStore extends RoomStore {
           curLeaderIndex + 1 <= room.users.length - 1
             ? curLeaderIndex + 1
             : 0;
-        room.users[curLeaderIndex].leader = false;
       }
       room.roomLeaderID = room.users[nextLeaderIndex].userID;
-      room.users[nextLeaderIndex].leader = true;
     } else { 
       this.removeRoom(roomID);
     }
@@ -154,7 +154,6 @@ export class InMemoryRoomStore extends RoomStore {
         socketID: user.socketID,
         avatarID: user.avatarID,
         pointCount: 0,
-        leader: false,
       });
       response.hostID = this.rooms.allRooms[roomID].roomHostID;
       return response;
@@ -174,10 +173,11 @@ export class InMemoryRoomStore extends RoomStore {
       messages: [],
       roomWord: "",
       timer: null,
-      gameCounter: 60,
+      gameCounter: 180,
       blockedUsersID: [],
       isRoomOpen: isRoomOpen,
       isGameStarted: false,
+      isRoundStarted: false
     };
     this.rooms.allRooms[room.roomID] = room;
     if (isRoomOpen) {

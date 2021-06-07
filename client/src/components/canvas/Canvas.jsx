@@ -9,6 +9,7 @@ function Canvas({socket, children}) {
   const dispatch = useDispatch();
   const canvasRef = React.useRef();
   const userID = useSelector(state => state.user.userID);
+  const leaderID = useSelector(state => state.game.leaderID);
   const users = useSelector(state => state.game.users);
   const isRoundStarted = useSelector(state => state.game.isRoundStarted);
 
@@ -43,22 +44,20 @@ function Canvas({socket, children}) {
       socket.removeListener("draw");
     }
   }, [])
+
   const handleStartNewRound = () => {
-    let leader = users.find(user => user.leader);
+    dispatch(setTool(null));
+    let leader = users.find(user => user.userID === leaderID);
     canvasRef.current.removeEventListener("mouseup", mouseUpHandler);
-    dispatch(discardGameData());
-    dispatch(setGameCounter(60));
-    dispatch(setRoundStarted(true));
     if (leader) {
       if (leader.userID === userID) {
         let brush = new Brush(canvasRef.current, socket);
         dispatch(setTool(brush));
         canvasRef.current.addEventListener("mouseup", mouseUpHandler);
-      } else {
-        dispatch(setTool(null));
       }
     }
   }
+
   const mouseUpHandler = (e) => {
     socket.emit("image:save", { img: canvasRef.current.toDataURL() });
   }

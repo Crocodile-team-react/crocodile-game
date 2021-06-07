@@ -9,18 +9,11 @@ function GameChat({ socket }) {
 
   let messages = useSelector(state => state.game.messages);
   let user = useSelector(state => state.user);
+  let leaderID = useSelector(state => state.game.leaderID);
+  let hostID = useSelector(state => state.game.roomHostID);
+
   let userID = user.userID;
   let userName = user.username;
-  let isUserLeader = useSelector(state => {
-    for (let i = 0; i < state.game.users.length; i++) {
-      if (state.game.users[i].leader) {
-        if (state.game.users[i].userID === userID) {
-          return true;
-        }
-        return false;
-      }
-    }
-  })
 
   const handleSendMessage = (text) => {
     if(text !== ''){
@@ -41,13 +34,13 @@ function GameChat({ socket }) {
 
   return (
     <div className="game-chat-block">
-      <div className={(isUserLeader?"host":"") + " box"}>
+      <div className={(hostID === userID?"host":"") + " box"}>
         <ul className="game-chat-block__messages">
           {messages.map((msg, i) => <Message key={i} from={msg.from}>{msg.text}</Message>)}          
         </ul>
       </div>
       {
-        !isUserLeader &&
+        leaderID !== userID &&
         <AnswerField onMessageSend={handleSendMessage}/>
       }
     </div>

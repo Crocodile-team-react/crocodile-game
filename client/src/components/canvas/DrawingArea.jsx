@@ -7,8 +7,9 @@ import { discardGameData } from '../../store/actions/gameActions';
 function DrawingArea({ socket }) {
   const dispatch = useDispatch();
   const userID = useSelector(state => state.user.userID);
+  const leaderID = useSelector(state => state.game.leaderID);
   const leader = useSelector(state => state.game.users.find(user => {
-    return user.leader;
+    return user.userID === leaderID;
   }));
   const isGameStarted = useSelector(state => state.game.isGameStarted);
   const isRoundStarted = useSelector(state => state.game.isRoundStarted);
@@ -70,7 +71,7 @@ function DrawingArea({ socket }) {
         <ToolBar socket={socket}/>
       }
       {
-        !modalData.isSeen && leader && leader.userID === userID && isGameStarted && !isRoundStarted &&
+        !modalData.isSeen && leader && leaderID === userID && isGameStarted && !isRoundStarted &&
         <ChooseModal onWordChoose={handleWordChoose}></ChooseModal>
       }
     </div>

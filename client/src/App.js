@@ -13,7 +13,9 @@ import {
   setGameModalData,
   discardGameData,
   setGameCounter,
-  setTotalPlayers
+  setTotalPlayers,
+  setLeaderID,
+  setMessages
 } from "./store/actions/gameActions";
 import {
   setUsername,
@@ -42,9 +44,6 @@ function App() {
   });
 
   React.useEffect(() => {
-    socket.current.onAny((msg, body) => {
-      console.log(msg, body);
-    });
     socket.current.on("newPlayer", (body) => {
       dispatch(setTotalPlayers(body.totalPlayers));
     })
@@ -58,23 +57,26 @@ function App() {
       dispatch(setUsers(users));
     });
     socket.current.on("room:userLeave", (users) => {
-      console.log(users);
       dispatch(setUsers(users));
     });
 
     socket.current.on("game:newLetter", (letters) => {
       dispatch(setLetters(letters));
     });
-    socket.current.on("game:start", (users) => {
-      dispatch(setUsers(users.users));
+    socket.current.on("game:start", ({users, leaderID}) => {
+      dispatch(setUsers(users));
+      dispatch(setLeaderID(leaderID));
       dispatch(setGameStarted(true));
     });
     socket.current.on("game:startNewRound", () => {
       dispatch(setRoundStarted(true));
+      dispatch(discardGameData());
+      dispatch(setGameCounter(180));
     });
     socket.current.on("game:endRound", (data) => {
       dispatch(setRoundStarted(false));
       dispatch(setUsers(data.users));
+      dispatch(setLeaderID(data.leaderID));
       dispatch(setGameModalData(data, true));
     });
 
@@ -92,6 +94,8 @@ function App() {
   const handleRoomLeave = () => {
     socket.current.emit("room:leave");
     dispatch(discardGameData());
+    dispatch(setUsers([]));
+    dispatch(setMessages([]));
     dispatch(setRoundStarted(false));
     dispatch(setGameStarted(false));
   };
@@ -157,7 +161,7 @@ function App() {
     socketGetConnection(true, 2000)
       .then((connected) => {
         socket.current.emit("room:join", { roomID },
-          ({ response, users, isGameStarted, gameCounter }) => {
+          ({ response, users, isGameStarted, isRoundStarted, gameCounter, leaderID, messages }) => {
             setTimeout(() => {
               // loading imitation
               setLoading(false);
@@ -170,11 +174,11 @@ function App() {
                 dispatch(setRoomHostID(response.hostID));
                 dispatch(setRoomID(roomID));
                 dispatch(setUsers(users));
+                dispatch(setLeaderID(leaderID));
                 dispatch(setGameStarted(isGameStarted));
+                dispatch(setRoundStarted(isRoundStarted));
+                dispatch(setMessages(messages));
                 dispatch(setGameCounter(gameCounter));
-                if (gameCounter < 60) {
-                  dispatch(setRoundStarted(true));
-                }
               }
             }, 200);
           }
@@ -262,9 +266,6 @@ function App() {
   
   return (
     <div className="app">
-      <span onClick={() => socket.current.emit("room:getInfo", (info) => {
-        console.log(info);
-      } )}>Click</span>
       {modalData.isSeen ? (
         <WarningModal title={modalData.title} body={modalData.body}>
           <button onClick={closeModal} className="button-medium-filled">

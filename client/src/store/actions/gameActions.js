@@ -109,3 +109,21 @@ export const setTotalPlayers = (num) => {
     }
   }
 }
+
+export const setLeaderID = (leaderID) => {
+  return {
+    type: gmC.SET_LEADER,
+    payload: {
+      leaderID,
+    }
+  }
+}
+
+export const setMessages = (messages) => {
+  return {
+    type: gmC.SET_MESSAGES,
+    payload: {
+      messages,
+    },
+  };
+};

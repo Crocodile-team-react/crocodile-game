@@ -32,6 +32,9 @@ export const toolReducer = (state = initialState, action) => {
     }
     case gmC.SET_TOOL: {
       let tool = action.payload.tool;
+      if (action.payload.tool === null && state.tool !== null) {
+        state.tool.destroyEvents();
+      }
       if (tool !== null) {
         tool.strokeStyle = state.color;
         tool.lineWidth = state.lineWidth;

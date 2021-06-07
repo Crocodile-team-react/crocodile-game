@@ -110,15 +110,13 @@ io.on("connection", function (socket) {
     let users = room.users;
     room.isGameStarted = true;
     roomStore.changeLeader(room.roomID);
-    broadcastToUsers(users, "game:start", { users });
+    broadcastToUsers(users, "game:start", { users, leaderID: room.roomLeaderID });
   });
   socket.on("game:findGame", (callback) => {
     let timerCounter = 0;
     let timer = setInterval(() => {
       timerCounter++;
       let url = roomStore.findOpenRoom();
-      console.log(url);
-      console.log(timerCounter);
       if (url !== null) {
         clearInterval(timer);
         callback(url);
@@ -137,7 +135,8 @@ io.on("connection", function (socket) {
     let room = roomStore.getRoom(roomID);
     let users = roomStore.getRoomUsers(roomID);
     room.roomWord = word;
-    room.gameCounter = 60; // round counter
+    room.gameCounter = 180; // round counter
+    room.isRoundStarted = true;
 
     let letters = new Array(room.roomWord.length).fill("");
 
@@ -152,25 +151,19 @@ io.on("connection", function (socket) {
 
     room.timer = setInterval(() => {
       room.gameCounter = room.gameCounter - 1;
-      if (room.gameCounter === 40) {
+      if (room.gameCounter === 150) {
         broadcastToUsers(users, "game:newLetter", letters);
       }
-      if (room.gameCounter === 35) {
+      if (room.gameCounter === 120) {
         letters[0] = room.roomWord[0];
         broadcastToUsers(users, "game:newLetter", letters);
       }
-      if (room.gameCounter === 30) {
+      if (room.gameCounter === 90) {
         letters[letters.length - 1] = room.roomWord[room.roomWord.length - 1];
         broadcastToUsers(users, "game:newLetter", letters);
       }
       if (room.gameCounter === 0) {
-        clearInterval(room.timer);
-        roomStore.changeLeader(room.roomID);
-        broadcastToUsers(users, "game:endRound", {
-          users: room.users,
-          word: room.roomWord,
-          winner: null,
-        });
+        roomEndRound(room.roomID);
       }
     }, 1000);
 
@@ -184,13 +177,7 @@ io.on("connection", function (socket) {
     broadcastToUsers(users, "game:newMessage", msg);
 
     if (room.roomWord === msg.text) {
-      clearInterval(room.timer);
-      roomStore.changeLeader(room.roomID);
-      broadcastToUsers(users, "game:endRound", {
-        users: room.users,
-        word: room.roomWord,
-        winner: socket.username,
-      });
+      roomEndRound(room.roomID, socket.username);
     }
   });
 
@@ -223,7 +210,6 @@ io.on("connection", function (socket) {
       socketID: socket.id,
       avatarID: socket.avatarID,
       pointCount: 0,
-      leader: false,
     };
     let response = roomStore.joinRoom(roomID, newUser);
     if (response.status === "success") {
@@ -235,7 +221,10 @@ io.on("connection", function (socket) {
         response,
         users: room.users,
         isGameStarted: room.isGameStarted,
+        isRoundStarted: room.isRoundStarted,
         gameCounter: room.gameCounter,
+        messages: room.messages,
+        leaderID: room.roomLeaderID,
       });
     } else {
       callback({response});
@@ -266,13 +255,7 @@ const socketLeaveRoom = (socket) => {
             let users = room.users;
             if (users.length) {
               if (room.roomLeaderID === removedUser.userID) {
-                roomStore.changeLeader(roomID);
-                clearInterval(room.timer);
-                broadcastToUsers(users, "game:endRound", {
-                  users: room.users,
-                  word: room.roomWord,
-                  winner: null,
-                });
+                roomEndRound(room.roomID);
               }
                 broadcastToUsers(users, "room:userLeave", users);
             } else {
@@ -289,7 +272,26 @@ const socketLeaveRoom = (socket) => {
 }
 
 const broadcastToUsers = (users, event, data = null) => {
-  users.forEach((user) => {
-    io.to(user.socketID).emit(event, data);
-  });
+  if (users) {
+    users.forEach((user) => {
+      io.to(user.socketID).emit(event, data);
+    });
+  }
 };
+
+const roomEndRound = (roomID, winner = null) => {
+  let room = roomStore.getRoom(roomID);
+  let users = room.users;
+
+  room.isRoundStarted = false;
+  roomStore.changeLeader(roomID);
+  clearInterval(room.timer);
+
+  broadcastToUsers(users, "game:endRound", {
+    users: room.users,
+    leaderID: room.roomLeaderID,
+    word: room.roomWord,
+    winner,
+  });
+
+}
