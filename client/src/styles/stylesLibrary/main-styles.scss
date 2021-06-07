@@ -169,6 +169,7 @@ $background-player: #4FAA69;
 }
 
 .avatar-big {
+  margin: 0 20px;
   width: 170px;
   height: 170px;
 }
@@ -180,8 +181,19 @@ $background-player: #4FAA69;
 
 .avatar-crocodile {
   background-image: url("./images/avatar-1.png");
+  
 }
 
+.remove-player {
+  border: none;
+  background-image: url('./images/kick.svg');
+  background-color: transparent;
+  height: 22px;
+  width: 20px;
+  margin-right: 11px;
+  opacity: 0;
+  transition: opacity 0.3s linear;
+}
 .avatar-monkey {
   background-image: url("./images/avatar-2.png");
 }

@@ -58,7 +58,6 @@ export default class Circle extends Tool {
     };
   }
   static draw(ctx, x, y, r, strokeStyle, lineWidth) {
-    console.log(strokeStyle);
     ctx.strokeStyle = strokeStyle;
     ctx.lineWidth = lineWidth;
     ctx.beginPath();

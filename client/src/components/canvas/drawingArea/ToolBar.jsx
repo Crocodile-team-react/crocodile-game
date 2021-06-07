@@ -46,12 +46,11 @@ function ToolBar({socket}) {
     dispatch(setTool(new curTool.Component(canvas, socket)));
   }
   const handleRangeChange = (e) => {
-    let opasity = "0." + e.target.value;
+    let opasity;
+    e.target.value === "10"? opasity = 1: opasity = "0." + e.target.value;
     dispatch(setOpacity(opasity));
-    let arr = color.split(', ');
-    arr[3] = opasity + ")";
-    const newColor = arr.join(", ");
-    dispatch(setColor(newColor));
+    
+    // dispatch(setColor(newColor));
   }
   return (
     <div className="tool-bar-block">

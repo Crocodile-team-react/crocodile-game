@@ -72,6 +72,7 @@ function Canvas({socket, children}) {
         Rect.draw(ctx, figure.x, figure.y, figure.width, figure.height, figure.strokeStyle, figure.lineWidth);
         break;
       case 'circle':
+
         Circle.draw(ctx, figure.x, figure.y, figure.r, figure.strokeStyle, figure.lineWidth);
         break;
       case 'finish':

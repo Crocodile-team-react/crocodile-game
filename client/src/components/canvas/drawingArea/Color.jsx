@@ -1,11 +1,11 @@
 import React from 'react';
 
-function Color(props) {
+function Color({colorCode, onClick ,selectedColor}) {
   return (
     <button 
-      className={props.active?'active color-block':'color-block'} 
-      style={{backgroundColor:props.col}}
-      onClick={()=>props.onClick(props.colorCode)}>
+      className={selectedColor === colorCode?'active color-block':'color-block'} 
+      style={{backgroundColor:colorCode}}
+      onClick={()=>onClick(colorCode)}>
     </button>
   );
 }

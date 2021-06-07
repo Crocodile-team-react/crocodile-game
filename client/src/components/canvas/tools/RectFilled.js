@@ -10,6 +10,7 @@ export default class RectFilled extends Rect {
             width: e.pageX - this.areaBlock.offsetLeft - this.startX,
             height: e.pageY - this.areaBlock.offsetTop - this.startY,
             strokeStyle: this.strokeStyle,
+            fillStyle: this.strokeStyle,
             lineWidth: 1,
         });
     }
@@ -33,6 +34,7 @@ export default class RectFilled extends Rect {
             this.ctx.fillStyle = this.strokeStyle;
             this.ctx.lineWidth = 1;
         };
+        console.log(this.strokeStyle);
     }
     static draw(ctx, x, y, w, h, strokeStyle) {
         ctx.fillStyle = strokeStyle;

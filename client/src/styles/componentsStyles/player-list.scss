@@ -30,14 +30,20 @@
             .avatar-block {
                 margin-left: 11px;
             }
-
+            
             .score {
                 display: flex;
-
+                align-items: center;
                 .coin {
                     margin: 0 13px 0 5px;
                 }
             }
         }
+    }
+}
+
+.player-list:hover{
+    .remove-player {
+        opacity:1;
     }
 }

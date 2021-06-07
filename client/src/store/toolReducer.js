@@ -22,19 +22,22 @@ export const toolReducer = (state = initialState, action) => {
     }
     case gmC.SET_COLOR: {
       let tool = state.tool;
+      const newColor = getNewColor(action.payload.color, state.opacity);
       if (tool !== null) {
-        tool.strokeStyle = action.payload.color;
+        tool.strokeStyle = newColor;
+        
       }
       return {
-        ...state,
-        tool: tool,
-        color: action.payload.color,
+          ...state,
+          tool: tool,
+          color: newColor,
       };
     }
     case gmC.SET_TOOL: {
       let tool = action.payload.tool;
       if (tool !== null) {
         tool.strokeStyle = state.color;
+        tool.fillStyle = state.color;
         tool.lineWidth = state.lineWidth;
       }
       
@@ -44,13 +47,14 @@ export const toolReducer = (state = initialState, action) => {
       }
     }
     case gmC.SET_OPACITY:{
+      const newColor = getNewColor(state.color, action.payload.opacity);
       let tool = state.tool;
       if (tool !== null) {
-          tool.opacity  = action.payload.opacity;
+          tool.strokeStyle = newColor;
       }
       return {
           ...state,
-          tool: tool,
+          color: newColor,
           opacity: action.payload.opacity,
       };
     }
@@ -59,3 +63,9 @@ export const toolReducer = (state = initialState, action) => {
     }
   }
 };
+
+function getNewColor(color, opasity){
+  let colorArr = color.split(", ");
+  colorArr[3] = opasity + ")";
+  return colorArr.join(", ");
+} 

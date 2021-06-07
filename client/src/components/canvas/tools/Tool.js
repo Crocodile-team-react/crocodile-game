@@ -10,6 +10,7 @@ export default class Tool {
   }
 
   set fillStyle(color) {
+    console.log(color);
     this.ctx.fillStyle = color;
   }
   set strokeStyle(color) {
