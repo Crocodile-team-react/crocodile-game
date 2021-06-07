@@ -70,6 +70,7 @@ export class InMemoryRoomStore extends RoomStore {
             : 0;
         room.users[curLeaderIndex].leader = false;
       }
+      room.roomLeaderID = room.users[nextLeaderIndex].userID;
       room.users[nextLeaderIndex].leader = true;
     } else { 
       this.removeRoom(roomID);
@@ -152,7 +153,7 @@ export class InMemoryRoomStore extends RoomStore {
         userID: user.userID,
         socketID: user.socketID,
         avatarID: user.avatarID,
-        pointCount: 10,
+        pointCount: 0,
         leader: false,
       });
       response.hostID = this.rooms.allRooms[roomID].roomHostID;
@@ -168,6 +169,7 @@ export class InMemoryRoomStore extends RoomStore {
       roomID: randomId(),
       roomHostID: host.userID,
       roomHostSocketID: host.socketID,
+      roomLeaderID: null,
       users: [],
       messages: [],
       roomWord: "",

@@ -24,7 +24,8 @@ function GameChat({ socket }) {
 
   const handleSendMessage = (text) => {
     if(text !== ''){
-      const msg = {from: userName, text: text};
+      const msg = { from: userName, text: text };
+      
       socket.emit("game:checkWord", msg);
     }
   };

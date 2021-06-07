@@ -109,7 +109,7 @@ io.on("connection", function (socket) {
     let room = roomStore.getRoom(socket.roomID);
     let users = room.users;
     room.isGameStarted = true;
-    room.users[0].leader = true;
+    roomStore.changeLeader(room.roomID);
     broadcastToUsers(users, "game:start", { users });
   });
   socket.on("game:findGame", (callback) => {
@@ -222,7 +222,7 @@ io.on("connection", function (socket) {
       username: socket.username,
       socketID: socket.id,
       avatarID: socket.avatarID,
-      pointCount: 10,
+      pointCount: 0,
       leader: false,
     };
     let response = roomStore.joinRoom(roomID, newUser);
@@ -265,7 +265,16 @@ const socketLeaveRoom = (socket) => {
           if (!room.users.find((user) => user.userID === socket.userID)) {
             let users = room.users;
             if (users.length) {
-              broadcastToUsers(users, "room:userLeave", users);
+              if (room.roomLeaderID === removedUser.userID) {
+                roomStore.changeLeader(roomID);
+                clearInterval(room.timer);
+                broadcastToUsers(users, "game:endRound", {
+                  users: room.users,
+                  word: room.roomWord,
+                  winner: null,
+                });
+              }
+                broadcastToUsers(users, "room:userLeave", users);
             } else {
               roomStore.removeRoom(roomID);
             }
