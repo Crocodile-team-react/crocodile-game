@@ -1,8 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Brush, Rect, Circle, Eraser, Line, CircleFilled, RectFilled } from "./tools";
-import { setCanvas } from '../../store/actions/canvasActions';
-import { setGameCounter, setRoundStarted, discardGameData, setGameStarted } from '../../store/actions/gameActions';
+import { setCanvas, pushToUndo } from '../../store/actions/canvasActions';
 import { setTool } from '../../store/actions/toolActions';
 
 function Canvas({socket, children}) {
@@ -25,13 +24,13 @@ function Canvas({socket, children}) {
     dispatch(setCanvas(canvasRef.current));
 
     socket.emit("image:get", (response) => {
-      const img = new Image();
-        img.src = response.data;
-        const ctx = canvasRef.current.getContext('2d');
-        img.onload = () => {
-          ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-          ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
-        }
+      let img = new Image();
+      let ctx = canvasRef.current.getContext('2d');
+      img.src = response.data;
+      img.onload = () => {
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
+      }
     })
 
   }, [])
@@ -40,8 +39,18 @@ function Canvas({socket, children}) {
     socket.on("draw", (figure) => {
       drawHandler(figure);
     })
+    socket.on("image:change", (dataUrl) => {
+      let ctx = canvasRef.current.getContext("2d");
+      let img = new Image();
+      img.src = dataUrl;
+      img.onload = () => {
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
+      };
+    })
     return () => {
       socket.removeListener("draw");
+      socket.removeListener("image:change");
     }
   }, [])
 
@@ -49,18 +58,26 @@ function Canvas({socket, children}) {
     dispatch(setTool(null));
     let leader = users.find(user => user.userID === leaderID);
     canvasRef.current.removeEventListener("mouseup", mouseUpHandler);
+    canvasRef.current.removeEventListener("mousedown", mouseDownHandler);
     if (leader) {
       if (leader.userID === userID) {
         let brush = new Brush(canvasRef.current, socket);
         dispatch(setTool(brush));
         canvasRef.current.addEventListener("mouseup", mouseUpHandler);
+        canvasRef.current.addEventListener("mousedown", mouseDownHandler);
       }
     }
   }
-
-  const mouseUpHandler = (e) => {
-    socket.emit("image:save", { img: canvasRef.current.toDataURL() });
+  const mouseDownHandler = () => {
+    let dataUrl = canvasRef.current.toDataURL();
+    dispatch(pushToUndo(dataUrl));
   }
+
+  const mouseUpHandler = () => {
+    let dataUrl = canvasRef.current.toDataURL();
+    socket.emit("image:save", { img: dataUrl });
+  }
+
   const drawHandler = (figure) => {
     const ctx = canvasRef.current.getContext('2d');
     switch (figure.type) {
@@ -80,13 +97,17 @@ function Canvas({socket, children}) {
         Eraser.draw(ctx, figure.x, figure.y, figure.lineWidth);
         break;
       case 'rectFilled':
-        RectFilled.draw(ctx, figure.x, figure.y, figure.width, figure.height, figure.strokeStyle, figure.lineWidth);
+        if (leaderID !== userID) {
+          RectFilled.draw(ctx, figure.x, figure.y, figure.width, figure.height, figure.strokeStyle);
+        }
         break;
       case 'line':
         Line.draw(ctx, figure.x1, figure.y1, figure.x2, figure.y2, figure.strokeStyle, figure.lineWidth);
         break;
       case 'circleFilled':
-        CircleFilled.draw(ctx, figure.x, figure.y, figure.r, figure.strokeStyle, figure.lineWidth);
+        if (leaderID !== userID) {
+          CircleFilled.draw(ctx, figure.x, figure.y, figure.r, figure.strokeStyle);
+        }
         break;
       case "clear": {
         ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);

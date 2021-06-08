@@ -82,17 +82,14 @@ io.on("connection", function (socket) {
   });
 
   socket.on("image:save", (img) => {
-    try {
-      const data = img.img.replace("data:image/png;base64,", "");
-      fs.writeFileSync(
-        path.resolve(__dirname, "files", `${socket.roomID}.jpg`),
-        data,
-        "base64"
-      );
-    } catch (e) {
-      console.log(e);
-    }
+    saveImage(img, socket);
   });
+  socket.on("image:change", (img) => {
+    saveImage(img, socket);
+    let room = roomStore.getRoom(socket.roomID);
+    let users = room.users;
+    broadcastToUsers(users, "image:change", img);
+  })
   socket.on("image:get", (callback) => {
     try {
       const file = fs.readFileSync(
@@ -294,4 +291,17 @@ const roomEndRound = (roomID, winner = null) => {
     winner,
   });
 
+}
+
+const saveImage = (img, socket) => {
+  try {
+    const data = img.img.replace("data:image/png;base64,", "");
+    fs.writeFileSync(
+      path.resolve(__dirname, "files", `${socket.roomID}.jpg`),
+      data,
+      "base64"
+    );
+  } catch (e) {
+    console.log(e);
+  }
 }

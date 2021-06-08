@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 function PlayerArea({ socket }) {
   const hostID = useSelector(state => state.game.roomHostID);
   const userID = useSelector(state => state.user.userID);
-  const leaderID = useSelector(state => state.game.leaderID);
   const isGameStarted = useSelector(state => state.game.isGameStarted);
   const isRoundStarted = useSelector(state => state.game.isRoundStarted);
 

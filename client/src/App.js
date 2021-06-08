@@ -1,7 +1,7 @@
 import "./styles/main.scss";
 import React from "react";
 import { StartPage, GamePage, NotFoundPage } from "./pages";
-import { useHistory, Switch, Route, Link, useLocation } from "react-router-dom";
+import { useHistory, Switch, Route, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setUsers,
