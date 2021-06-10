@@ -21,7 +21,6 @@ export default class Brush extends Tool {
   mouseDownHandler(e) {
 
     this.ctx.strokeStyle = this.strokeStyle;
-     // this.ctx.strokeWidth = this.strokeWidth;
     
     this.mouseDown = true;
     this.ctx.beginPath();
@@ -30,7 +29,8 @@ export default class Brush extends Tool {
       e.pageY - this.areaBlock.offsetTop
     );
     
-   }
+  }
+  
   mouseMoveHandler(e) {
     if (this.mouseDown) {
       this.socket.emit("draw", {

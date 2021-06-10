@@ -7,14 +7,27 @@ const initialState = {
   roomHostID: "",
   isGameStarted: false,
   isRoundStarted: false,
+  leaderID: null,
   gameModal: { isSeen: false, winner: null, word: "" },
-  counter: 500,
+  counter: 180,
   letters: [],
   totalPlayers: 0,
 };
 
 export const gameReducer = (state = initialState, action) => {
   switch (action.type) {
+    case gmC.SET_MESSAGES: {
+      return {
+        ...state,
+        messages: action.payload.messages
+      }
+    }
+    case gmC.SET_LEADER: {
+      return {
+        ...state,
+        leaderID: action.payload.leaderID
+      }
+    }
     case gmC.SET_TOTAL_PLAYERS: {
       return {
         ...state,

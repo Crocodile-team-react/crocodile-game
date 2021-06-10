@@ -8,3 +8,22 @@ export const setCanvas = (canvas) => {
     },
   };
 };
+
+
+export const pushToUndo = (data) => {
+  return {
+    type: gmC.PUSH_TO_UNDO,
+    payload: {
+      data,
+    }
+  }
+}
+
+export const pushToRedo = (data) => {
+  return {
+    type: gmC.PUSH_TO_REDO,
+    payload: {
+      data,
+    },
+  };
+};

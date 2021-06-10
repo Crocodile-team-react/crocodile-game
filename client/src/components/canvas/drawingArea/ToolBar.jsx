@@ -3,11 +3,14 @@ import Tool from './Tool';
 import Range from './Range';
 import { Brush, Circle, Rect, Eraser, Line, RectFilled, CircleFilled } from '../tools';
 import { useDispatch, useSelector } from 'react-redux';
-import { setTool, setLineWidth } from '../../../store/actions/toolActions';
+import { setTool, setLineWidth, setOpacity } from '../../../store/actions/toolActions';
+import { pushToRedo, pushToUndo } from '../../../store/actions/canvasActions';
 
 function ToolBar({socket}) {
   const dispatch = useDispatch();
   const canvas = useSelector(state => state.canvas.canvas);
+  const undoList = useSelector(state => state.canvas.undoList);
+  const redoList = useSelector(state => state.canvas.redoList);
   const [tools, setTools] = React.useState(toolsArr);
   const [thickness, setThickness] = React.useState(thicknessArr);
 
@@ -44,8 +47,24 @@ function ToolBar({socket}) {
 
     dispatch(setTool(new curTool.Component(canvas, socket)));
   }
+
   const handleRangeChange = (e) => {
-    console.log(e.target.value);
+    let opasity = e.target.value === "10" ? "1" : "0." + e.target.value;
+    dispatch(setOpacity(opasity));
+  }
+  const undo = () => {
+    if (undoList.length) {
+      let dataUrl = undoList.pop();
+      dispatch(pushToRedo(canvas.toDataURL()));
+      socket.emit("image:change", dataUrl);
+    }
+  }
+  const redo = () => {
+    if (redoList.length) {
+      let dataUrl = redoList.pop();
+      dispatch(pushToUndo(canvas.toDataURL()));
+      socket.emit("image:change", dataUrl);
+    }
   }
   return (
     <div className="tool-bar-block">
@@ -62,8 +81,8 @@ function ToolBar({socket}) {
         }
       </div>
       <div className="tool-bar-block__arrows">
-        <button className="arrow-previous"></button>
-        <button className="arrow-next"></button>
+        <button onClick={undo} className="arrow-previous"></button>
+        <button onClick={redo} className="arrow-next"></button>
       </div>
       <div className="tool-bar-block__thickness">
         {

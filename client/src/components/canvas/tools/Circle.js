@@ -5,11 +5,13 @@ export default class Circle extends Tool {
     super(canvas, socket);
     this.listen();
   }
+
   listen() {
     this.canvas.onmouseup = this.mouseUpHandler.bind(this);
     this.canvas.onmousedown = this.mouseDownHandler.bind(this);
     this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
   }
+
   mouseUpHandler(e) {
     this.mouseDown = false;
     const currentX = e.pageX - this.areaBlock.offsetLeft;
@@ -18,6 +20,7 @@ export default class Circle extends Tool {
       (currentX - this.startX) ** 2 + (currentY - this.startY) ** 2,
       0.5
     );
+
     this.socket.emit("draw", {
       type: "circle",
       x: this.startX,
@@ -27,6 +30,7 @@ export default class Circle extends Tool {
       lineWidth: this.lineWidth,
     });
   }
+
   mouseDownHandler(e) {
     this.mouseDown = true;
     this.ctx.beginPath();
@@ -46,6 +50,7 @@ export default class Circle extends Tool {
       this.draw(this.startX, this.startY, radius);
     }
   }
+
   draw(x, y, r) {
     const img = new Image();
     img.src = this.saved;
@@ -57,8 +62,8 @@ export default class Circle extends Tool {
       this.ctx.stroke();
     };
   }
+
   static draw(ctx, x, y, r, strokeStyle, lineWidth) {
-    console.log(strokeStyle);
     ctx.strokeStyle = strokeStyle;
     ctx.lineWidth = lineWidth;
     ctx.beginPath();

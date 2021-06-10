@@ -43,7 +43,7 @@ function PlayerArea({ socket }) {
       {
         isGameStarted ?
           (isRoundStarted ?
-            <GameChat socket={socket} /> :
+              <GameChat socket={socket} />:
             <p>Ждем пока игрок выберет слово</p>
           )
           :

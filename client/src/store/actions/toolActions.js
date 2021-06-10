@@ -24,3 +24,12 @@ export const setLineWidth = (lineWidth) => {
     }
   }
 }
+
+export const setOpacity = (opacity) => {
+  return {
+    type: gmC.SET_OPACITY,
+    payload: {
+      opacity,
+    },
+  };
+};

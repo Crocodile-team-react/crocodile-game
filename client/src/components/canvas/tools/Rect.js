@@ -25,6 +25,7 @@ export default class Rect extends Tool {
   }
   mouseDownHandler(e) {
     this.mouseDown = true;
+    
     this.ctx.beginPath();
 
     this.startX = e.pageX - this.areaBlock.offsetLeft;
